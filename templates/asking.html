@@ -1,0 +1,98 @@
+$def with(session)
+$:render.header() 
+
+  <div class="parent"> 
+	<div class="sidebar">
+	  <div class="userpic">
+		<a href=""><img src=$:session.user.profile_image_url width="64px" height="64px"/></a>
+	  </div>
+	  <div class="name">
+		<a href="">$:session.user.name</a>
+	  </div>
+	  <div class="screenname">
+		<a href="#">@$:session.user.screen_name</a>
+	  </div>
+	  <div class="userlocation">
+		<a href="#">$:session.user.location</a>
+	  </div>
+	  <hr>
+	  <table id="user_info_table" border="0" cellpadding="2"> 
+		<tr>
+		  <td>
+			<a href="#"><strong>$:session.user.statuses_count</strong></a> 
+		  </td>
+		  <td>
+			<a href="#"><strong>$:session.user.friends_count</strong></a> 
+		  </td>
+		  <td>
+			<a href="#"><strong>$:session.user.followers_count</strong></a> 
+		  </td>
+		</tr>
+		<tr>
+		  <td>
+			<a href="#">TWEETS</a> 
+		  </td>
+		  <td>
+			<a href="#">FOLLOWING</a> 			
+		  </td>
+		  <td>
+			<a href="#">FOLLOWERS</a> 			
+		  </td>
+		</tr>
+	  </table>
+	</div>
+	<div class="asking-div">
+	  <form class="form-horizonal" id="asking_form" method="POST">
+		<fieldset>
+		  <div class="control-group center">
+			<h3 class="control-label" id="textarea-label">Type your question here:</h3>
+			<div class="controls">   
+			  <textarea class="input-xlarge" id="textarea" rows="4">
+			  </textarea> 	
+			</div>
+		  </div>
+	 	
+		  <div class="tweet-button-sub-container">
+			<button id="show-experts" class="btn btn-success" type="submit" data-loading-text="Calculating.... " data-complete-text="Finished!" disabled="true">
+			Show Experts
+			</button>  
+			<span class='icon-question-sign' title="Click this button to know whom you can @ to answer your question" onmouseover="jQuery(this).tooltip('show')"></span>
+			&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
+			<input class="tweet-counter" id="word-counter" value="140" disabled="disabled"/>
+
+			<button id="ask-them" class="btn btn-primary" type="submit" data-content="Click here to tweet your question and then you can wait for their reply!" data-original-title="Tweet It!" onmouseover="jQuery(this).popover('show')" disabled="true">
+			Ask Them
+			</button> 
+		  </div>
+		</fieldset>
+	  </form>
+
+	  <div>
+		<span id="category-title"><h4>Category: </h4>
+		  <span id="category"></span>
+		</span>
+		<br/>
+		<span id="experts-title"><h4>Experts: </h4>
+		  <span id="experts"></span>
+		</span> 
+	  </div>
+	  <div class="experts-table">
+	    <table border="1" cellpadding="2" width="100%">  
+		  <tr height="48px">
+			<td width="48px">
+			  test
+			</td>
+			<td width="82px">
+			  test@!adsfn
+			</td>
+			<td>
+			  test
+			</td>
+		  </tr>
+		</table>
+      </div>
+	</div> 
+  </div>
+
+$:render.foot()
+
