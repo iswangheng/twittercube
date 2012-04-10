@@ -1,11 +1,11 @@
 //asking.html:	set textarea to be empty!
 jQuery(function(){
 	jQuery('#textarea').val('');
-    var user_link = "https://twitter.com/#!/" + jQuery('.screenname a').text()
-    jQuery('.userpic a').attr("href", user_link) 
-    jQuery('.name a').attr("href", user_link) 
-    jQuery('.screenname a').attr("href", user_link) 
-    jQuery('#user_info_table  a').attr("href", user_link)  
+    var user_link = "https://twitter.com/#!/" + jQuery('.screenname a').text();
+    jQuery('.userpic a').attr("href", user_link);
+    jQuery('.name a').attr("href", user_link);
+    jQuery('.screenname a').attr("href", user_link); 
+    jQuery('#user_info_table  a').attr("href", user_link);  
 });
   
 
@@ -14,7 +14,7 @@ jQuery('#textarea').keyup(monitor_textarea);
 
 //asking.html:	monitor the textarea for word counter
 function monitor_textarea(){
-	var maxLength = 140
+	var maxLength = 140;
 	var textareaVal = jQuery('#textarea').val().replace(/^\s*|\s*$/g,'');
 	if(textareaVal == '') {
   		jQuery('#show-experts').attr('disabled', 'disabled');
@@ -45,12 +45,21 @@ jQuery('#show-experts').click(function() {
 		success: function(dataJSON){
 				var data =jQuery.parseJSON(dataJSON); 
 				jQuery('#category').text(data.category).hide().fadeIn(1000);
- 				var expertsList = data.experts.replace(/^\s*|\s*$/g,'').split(' ');
-				var experts = ''; 
+ 				//var expertsList = data.experts;
+				var expertsList = data.experts_detailed_list;
+                var experts = ''; 
 				for(i = 0; i < expertsList.length; i++){
-					experts = experts + expertsList[i] + ' ';
-				} 
-				jQuery('#experts').html(experts).hide().fadeIn(1500);
+					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
+                    expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
+                                       + "><img src='" + expertsList[i]['profile_image_url'] + "' width='48px' height='48px'/></a>";
+                    expert_screen_name_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
+                                       + ">@" + expertsList[i]['screen_name'] + "</a>";
+                    expert_description = expertsList[i]['description'] ;
+                    table_tr_new = "<tr height='48px'><td width='48px'>" + expert_img_html
+                                   + "</td><td width='82px'>" + expert_screen_name_html
+                                   + "</td><td>" + expert_description + "</td></tr>";
+                    jQuery('.experts-table>table>tbody').append(table_tr_new);
+				}  
 				jQuery('.experts-table').hide().fadeIn(1000);
 				jQuery('#textarea').val(jQuery('#textarea').val() + ' ' + experts);
 				monitor_textarea();
@@ -68,11 +77,9 @@ jQuery('#ask-them').click(function() {
         url: 'submit_tweet',
 		type: 'POST',
 		data: {signal: teststr},
-        success: function() {
-			jQuery('.experts-table table tr').remove();
+        success: function() { 
 			jQuery('.experts-table>table').append(newtable);
-			jQuery('.experts-table>table').append(newtable);
-			jQuery('.experts-table>table').append(newtable);
+			jQuery('.experts-table>table').append(newtable); 
         }
 	});
     return false;
