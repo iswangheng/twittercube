@@ -76,6 +76,36 @@ def get_tweepAPI(session):
     return api
 
 
+#store the current user info into the session
+# of course we need to use the api to get the current user info
+def store_user_into_session(api):
+    try:
+        user = api.me()
+        user_img = user.profile_image_url
+        user_name = user.name
+        user_screen_name = user.screen_name 
+        user_location = user.location 
+        user_statuses_count = user.statuses_count
+        user_following_count = user.friends_count
+        user_followers_count = user.followers_count 
+    except:
+        user_img = ""
+        user_name = "ERROR"
+        user_screen_name = 'error'
+        user_location = 'Hong Kong'
+        user_statuses_count = 123
+        user_following_count = 456
+        user_followers_count = 789 
+    web.ctx.session.user_img = user_img
+    web.ctx.session.user_name = user_name
+    web.ctx.session.user_screen_name = user_screen_name
+    web.ctx.session.user_location = user_location
+    web.ctx.session.user_statuses_count = user_statuses_count
+    web.ctx.session.user_following_count = user_following_count
+    web.ctx.session.user_followers_count = user_followers_count
+    print 'web.ctx.session %s' % web.ctx.session.user_name 
+
+
 #to render the index page
 class Index:
     def GET(self):
@@ -141,11 +171,12 @@ class SubmitTweet:
         except tweepy.TweepError, err_msg:
             #TODO here to handle the tweepy or api error
             print err_msg
-        try:
-            user = api.me()
-            user_img = user.profile_image_url
-            user_name = user.name
-            user_screen_name = user.screen_name 
+        try: 
+            user_img = web.ctx.session.user_img
+            user_name = web.ctx.session.user_name
+            user_screen_name = web.ctx.session.user_screen_name  
+            #the reason why I reqeust 10 tweets below is for further use, like display them all in the page
+            #but i am not gonna use them right now because theres much more to be done, so I just use the latest tweet here
             status_list = api.user_timeline(screen_name = user_screen_name, count=10)
             print 'list 0 text;--------- ', status_list[0].created_at
             tweet_time = str(status_list[0].created_at) 
@@ -173,10 +204,56 @@ class Asking:
     def GET(self):
         try:
             print "web.ctx.session.access_token_key: %s" % web.ctx.session.access_token_key
+            api = get_tweepAPI(web.ctx.session) 
+            store_user_into_session(api)    
             return render.asking()
         except AttributeError:
             web.seeother('sign_in_with_twitter')
 
+
+#when the user has come to the asking.html page
+# which means that he has logged in
+# so this class is to process the ajax of showing user info
+class ShowUserInfo:
+    def POST(self):    
+        session = web.ctx.session     
+        data = {'user_img': session.user_img} 
+        data.update({'user_name': session.user_name}) 
+        data.update({'user_screen_name': session.user_screen_name}) 
+        data.update({'user_location': session.user_location}) 
+        data.update({'user_statuses_count': session.user_statuses_count}) 
+        data.update({'user_following_count': session.user_following_count}) 
+        data.update({'user_followers_count': session.user_followers_count}) 
+        web.header('Content-Type', 'application/json')
+        data_string = json.dumps(data)
+        return data_string      
+
+
+#when the user has clicked the ask-them button
+# which means that he submitted one tweet
+# so the tweet count number in the page should be updated
+# but here we update all the info just in case 
+class UpdateUserInfo:
+    def POST(self):           
+        api = get_tweepAPI(web.ctx.session)     
+        user = api.me() 
+        user_img = user.profile_image_url
+        user_name = user.name 
+        user_location = user.location 
+        user_statuses_count = user.statuses_count
+        user_following_count = user.friends_count
+        user_followers_count = user.followers_count 
+        user_statuses_count = user.statuses_count
+        data = {'user_statuses_count': user_img} 
+        data.update({'user_name': user_name})  
+        data.update({'user_location': user_location}) 
+        data.update({'user_statuses_count': user_statuses_count}) 
+        data.update({'user_following_count': user_following_count}) 
+        data.update({'user_followers_count': user_followers_count}) 
+        web.header('Content-Type', 'application/json')
+        data_string = json.dumps(data)
+        return data_string   
+ 
 
 #when use click the sign in with twitter button
 class SignIn:
@@ -187,8 +264,7 @@ class SignIn:
         except tweepy.TweepError:
             print 'Error! Failed to get request token.' 
         web.ctx.session.request_token_key = auth.request_token.key 
-        web.ctx.session.request_token_secret = auth.request_token.secret 
-        print 'session_id ------->>: ', web.ctx.session.session_id  
+        web.ctx.session.request_token_secret = auth.request_token.secret  
         print redirect_url
         web.seeother(redirect_url) 
 
@@ -210,7 +286,6 @@ class Callback:
             print "auth.access_token.secret: %s" % auth.access_token.secret
             web.ctx.session.access_token_key = auth.access_token.key
             web.ctx.session.access_token_secret = auth.access_token.secret
-            api = tweepy.API(auth)   
         except tweepy.TweepError, msg:
             print 'Error: ', msg
         web.seeother('asking.html')  

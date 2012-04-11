@@ -3,28 +3,30 @@ $:render.header()
   <div class="parent"> 
 	<div class="sidebar">
 	  <div class="userpic">
-		<a href="" target="_blank"><img src=user.profile_image_url width="64px" height="64px"/></a>
+		<a href="" target="_blank"><img src="" width="64px" height="64px"/></a>
 	  </div>
 	  <div class="name">
-		<a href="" target="_blank">user.name</a>
+		<a href="" target="_blank">name</a>
 	  </div>
 	  <div class="screenname">
 		<a href="#" target="_blank">@screen_name</a>
 	  </div>
 	  <div class="userlocation">
-		<a href="#" target="_blank">user.location</a>
+		<a href="#" target="_blank">location</a>
 	  </div>
 	  <hr>
 	  <table id="user_info_table" border="0" cellpadding="2"> 
 		<tr>
 		  <td>
-			<a href="#" target="_blank"><strong>user.statuses_count</strong></a> 
+            <label>
+			<a href="#" target="_blank"><strong id="statuses_count">111</strong></a>
+            </label> 
+		  </td>
+		  <td>  
+			<a href="#" target="_blank"><strong id="following_count">222</strong></a> 
 		  </td>
 		  <td>
-			<a href="#" target="_blank"><strong>user.friends_count</strong></a> 
-		  </td>
-		  <td>
-			<a href="#" target="_blank"><strong>user.followers_count</strong></a> 
+			<a href="#" target="_blank"><strong id="followers_count">333</strong></a> 
 		  </td>
 		</tr>
 		<tr>
@@ -70,6 +72,21 @@ $:render.header()
       </div>
 	
 	  <div class="help_div"> 
+        <span class="label label-important">How to Use?</span>
+        <dl class="dl-horizontal">
+		  <dt>Got Question?</dt>
+          <dd> 
+            Just type your question in the textarea.
+          </dd>
+ 		  <dt>Then What?</dt>
+          <dd>
+            Click the green button. And then wait for the amazing result!
+          </dd>
+		  <dt>Last Step</dt>
+          <dd>
+            Click the blue button to submit your tweet!
+          </dd>      
+        </dl>
 	  </div>
 
 	  <div class="category_div">
@@ -115,12 +132,11 @@ $:render.header()
           <tbody>
           </tbody>
 		</table>
-      </div>  <!- end div for class="experts-table table table-striped  -->
+      </div>  <!-- end div for class="experts-table table table-striped  -->
   
 
-	</div>  <!- end div for class="asking-div"  -->
-  </div> <!- end div for class="parent"  -->
+	</div>  <!-- end div for class="asking-div"  -->
+  </div> <!-- end div for class="parent"  -->
  
 
-$:render.foot()
-
+$:render.foot() 

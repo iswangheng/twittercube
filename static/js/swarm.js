@@ -5,13 +5,60 @@ jQuery.noConflict();
 //asking.html:	set textarea to be empty!
 jQuery(function(){
 	jQuery('#textarea').val('');
-    var user_link = "https://twitter.com/#!/" + jQuery('.screenname a').text();
-    jQuery('.userpic a').attr("href", user_link);
-    jQuery('.name a').attr("href", user_link);
-    jQuery('.screenname a').attr("href", user_link); 
-    jQuery('#user_info_table  a').attr("href", user_link);  
+	//below is to show the correct info of current user
+	show_user_info();  
 });
-  
+
+ 
+
+//asking.html:	show the user info
+function show_user_info(){
+	var post_data = "show user info"
+	jQuery.ajax({
+        url: 'show_user_info',
+		type: 'POST', 
+		data: {signal: post_data},
+        dataType: 'json',
+		success: function(data){      
+			var user_link = "https://twitter.com/#!/" + data.user_screen_name;
+            jQuery('.userpic img').attr("src", data.user_img);
+ 			jQuery('.name>a').text(data.user_name);  
+ 			jQuery('.screenname>a').text('@' + data.user_screen_name);  
+ 			jQuery('.userlocation>a').text(data.user_location); 
+ 			jQuery('#statuses_count').text(data.user_statuses_count);  
+ 			jQuery('#following_count').text(data.user_following_count);  
+ 			jQuery('#followers_count').text(data.user_followers_count); 
+			jQuery('.userpic a').attr("href", user_link);
+			jQuery('.name a').attr("href", user_link);
+			jQuery('.screenname a').attr("href", user_link); 
+			jQuery('.userlocation a').attr("href", user_link);
+			jQuery('#user_info_table  a').attr("href", user_link);
+			}
+		});
+    return false;
+}
+
+
+//asking.html:	update the user info
+function update_user_info(){
+	var post_data = "update_user_info"
+	jQuery.ajax({
+        url: 'update_user_info',
+		type: 'POST', 
+		data: {signal: post_data},
+        dataType: 'json',
+		success: function(data){
+			jQuery('.userpic img').attr("src", data.user_img);
+ 			jQuery('.name>a').text(data.user_name);    
+ 			jQuery('.userlocation>a').text(data.user_location); 
+ 			jQuery('#statuses_count').text(data.user_statuses_count);  
+ 			jQuery('#following_count').text(data.user_following_count);  
+ 			jQuery('#followers_count').text(data.user_followers_count); 
+			}
+		});
+    return false;
+}
+
 
 //asking.html:	monitor the textarea, change the state of the button and word counter
 jQuery('#textarea').keyup(monitor_textarea); 
@@ -100,6 +147,7 @@ jQuery('#ask-them').click(function() {
             jQuery('.user_text_div').text(tweet_text);
             jQuery('.user_tweets_parent_div').hide().fadeIn(1000);
             jQuery('#ask-them').button('reset');
+            update_user_info();
         }
 	});
     return false;

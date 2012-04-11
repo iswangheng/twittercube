@@ -13,7 +13,15 @@ store = web.session.DBStore(db, 'sessions')
 
 
 if web.ctx.get('_session') is None:
-    session = web.session.Session(app, store, {'request_token_key':'', 'request_token_secret':'', 'access_token_key ':'','access_token_secret':''}) 
+    session = web.session.Session(app, store, {'request_token_key':'', 'request_token_secret':'', 'access_token_key ':'','access_token_secret':'',
+                                  'user_img':'',
+                                  'user_name':'',
+                                  'user_screen_name':'',
+                                  'user_location':'',
+                                  'user_statuses_count':'',
+                                  'user_following_count':'',
+                                  'user_followers_count':''})
+
     print "!!!! init the session la !!!"
     web.ctx.session = session
 else:
