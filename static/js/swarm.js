@@ -1,3 +1,7 @@
+
+jQuery.noConflict();
+
+
 //asking.html:	set textarea to be empty!
 jQuery(function(){
 	jQuery('#textarea').val('');
@@ -37,25 +41,26 @@ function monitor_textarea(){
 //asking.html:	show-experts button!
 jQuery('#show-experts').click(function() {
     jQuery(this).button('loading'); 
-	var teststr = jQuery('#textarea').val().replace(/^\s*|\s*$/g,'');
+	var post_data = jQuery('#textarea').val().replace(/^\s*|\s*$/g,'');
 	jQuery.ajax({
         url: 'show_experts',
 		type: 'POST', 
-		data: {signal: teststr},
-		success: function(dataJSON){
-				var data =jQuery.parseJSON(dataJSON); 
-				jQuery('#category').text(data.category).hide().fadeIn(1000);
- 				//var expertsList = data.experts;
+		data: {signal: post_data},
+        dataType: 'json',
+		success: function(data){  
+                var category = data.category;  
+			    jQuery('#category').text(category).hide().fadeIn(1000);
+                jQuery('.experts-table>table>tbody tr').remove()
 				var expertsList = data.experts_detailed_list;
                 var experts = ''; 
 				for(i = 0; i < expertsList.length; i++){
 					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
-                    expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
-                                       + "><img src='" + expertsList[i]['profile_image_url'] + "' width='48px' height='48px'/></a>";
-                    expert_screen_name_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
-                                       + ">@" + expertsList[i]['screen_name'] + "</a>";
-                    expert_description = expertsList[i]['description'] ;
-                    table_tr_new = "<tr height='48px'><td width='48px'>" + expert_img_html
+                    var expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
+                                       + " target='_blank'><img src='" + expertsList[i]['profile_image_url'] + "' width='48px' height='48px'/></a>";
+                    var expert_screen_name_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
+                                       + " target='_blank'>@" + expertsList[i]['screen_name'] + "</a>";
+                    var expert_description = expertsList[i]['description'] ;
+                    var table_tr_new = "<tr height='48px'><td width='48px'>" + expert_img_html
                                    + "</td><td width='82px'>" + expert_screen_name_html
                                    + "</td><td>" + expert_description + "</td></tr>";
                     jQuery('.experts-table>table>tbody').append(table_tr_new);
@@ -63,7 +68,7 @@ jQuery('#show-experts').click(function() {
 				jQuery('.experts-table').hide().fadeIn(1000);
 				jQuery('#textarea').val(jQuery('#textarea').val() + ' ' + experts);
 				monitor_textarea();
-	  			jQuery('#show-experts').button('reset');	
+                jQuery('#show-experts').button('reset');	
 			}
 		});
     return false;
@@ -71,15 +76,30 @@ jQuery('#show-experts').click(function() {
 
 
 jQuery('#ask-them').click(function() {  
-    var teststr = jQuery('#textarea').val(); 	
-	var newtable = '<tr height="48px"><td width="48px">test</td><td width="82px">test@!adsfn</td><td>test</td></tr>';
+    jQuery(this).button('loading'); 
+    jQuery(this).popover('hide');
+    var post_data = jQuery('#textarea').val(); 	 
 	jQuery.ajax({
         url: 'submit_tweet',
 		type: 'POST',
-		data: {signal: teststr},
-        success: function() { 
-			jQuery('.experts-table>table').append(newtable);
-			jQuery('.experts-table>table').append(newtable); 
+		data: {signal: post_data},
+        dataType: 'json',
+        success: function(data) { 
+            var user_img = data.user_img;
+            var user_name = data.user_name;
+            var user_screen_name = data.user_screen_name;
+            var tweet_time = data.tweet_time;
+            var tweet_text = data.tweet_text;
+            var user_link = "https://twitter.com/#!/" + user_screen_name;
+            jQuery('.user_img_div img').attr('src', user_img);
+            jQuery('.user_img_div>a').attr('href', user_link);
+            jQuery('.user_name_div>a').attr('href',user_link);
+            jQuery('.user_name_div>a').text(user_name);
+            jQuery('.user_screen_name_div>a').text(user_screen_name);
+            jQuery('.user_time_div').text(tweet_time);
+            jQuery('.user_text_div').text(tweet_text);
+            jQuery('.user_tweets_parent_div').hide().fadeIn(1000);
+            jQuery('#ask-them').button('reset');
         }
 	});
     return false;

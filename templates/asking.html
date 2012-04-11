@@ -4,43 +4,44 @@ $:render.header()
   <div class="parent"> 
 	<div class="sidebar">
 	  <div class="userpic">
-		<a href=""><img src=$:session.user.profile_image_url width="64px" height="64px"/></a>
+		<a href="" target="_blank"><img src=$:session.user.profile_image_url width="64px" height="64px"/></a>
 	  </div>
 	  <div class="name">
-		<a href="">$:session.user.name</a>
+		<a href="" target="_blank">$:session.user.name</a>
 	  </div>
 	  <div class="screenname">
-		<a href="#">@$:session.user.screen_name</a>
+		<a href="#" target="_blank">@$:session.user.screen_name</a>
 	  </div>
 	  <div class="userlocation">
-		<a href="#">$:session.user.location</a>
+		<a href="#" target="_blank">$:session.user.location</a>
 	  </div>
 	  <hr>
 	  <table id="user_info_table" border="0" cellpadding="2"> 
 		<tr>
 		  <td>
-			<a href="#"><strong>$:session.user.statuses_count</strong></a> 
+			<a href="#" target="_blank"><strong>$:session.user.statuses_count</strong></a> 
 		  </td>
 		  <td>
-			<a href="#"><strong>$:session.user.friends_count</strong></a> 
+			<a href="#" target="_blank"><strong>$:session.user.friends_count</strong></a> 
 		  </td>
 		  <td>
-			<a href="#"><strong>$:session.user.followers_count</strong></a> 
+			<a href="#" target="_blank"><strong>$:session.user.followers_count</strong></a> 
 		  </td>
 		</tr>
 		<tr>
 		  <td>
-			<a href="#">TWEETS</a> 
+			<a href="#" target="_blank">TWEETS</a> 
 		  </td>
 		  <td>
-			<a href="#">FOLLOWING</a> 			
+			<a href="#" target="_blank">FOLLOWING</a> 			
 		  </td>
 		  <td>
-			<a href="#">FOLLOWERS</a> 			
+			<a href="#" target="_blank">FOLLOWERS</a> 			
 		  </td>
 		</tr>
 	  </table>
-	</div>
+	</div>  <!--  end for class=sidebar div -->
+
 	<div class="asking-div">
 	  <form class="form-horizonal" id="asking_form" method="POST">
 		<fieldset>
@@ -50,8 +51,8 @@ $:render.header()
 			  <textarea class="input-xlarge" id="textarea" rows="4">
 			  </textarea> 	
 			</div>
-		  </div>
-	 	
+		  </div>    <!--  end for class = 'control-group center' div -->
+
 		  <div class="tweet-button-sub-container">
 			<button id="show-experts" class="btn btn-success" type="submit" data-loading-text="Calculating.... " data-complete-text="Finished!" disabled="true">
 			Show Experts
@@ -60,23 +61,46 @@ $:render.header()
 			&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;
 			<input class="tweet-counter" id="word-counter" value="140" disabled="disabled"/>
 
-			<button id="ask-them" class="btn btn-primary" type="submit" data-content="Click here to tweet your question and then you can wait for their reply!" data-original-title="Tweet It!" onmouseover="jQuery(this).popover('show')" disabled="true">
+			<button id="ask-them" class="btn btn-primary" type="submit" data-content="Click here to tweet your question and then you can wait for their reply!" data-original-title="Tweet It!" onmouseover="jQuery(this).popover('show')" data-loading-text="Tweeting.. " disabled="true">
 			Ask Them
 			</button> 
-		  </div>
+		  </div>   <!--  end for class = 'tweet-button-sub-container' div -->
 		</fieldset>
 	  </form>
 
-	  <div>
-		<span id="category-title"><h4>Category: </h4>
-		  <span id="category"></span>
-		</span>
-	    <hr>
-		<span id="experts-title"><h4>Experts: </h4> 
-		</span> 
+	  <div class="category_div">
+		<label id="category-title"><h4>Category: &nbsp;&nbsp;</h4>
+		</label> 
+		<text id="category" class="category"></text>
 	  </div>
-	  <div class="experts-table table">
-	    <table cellpadding="2" width="100%">  
+
+      <div class="user_tweets_parent_div">
+		  <span id="user_tweets"><h4>Tweets: </h4> </span>
+		  <div class="user_tweet_div">
+			<div class="user_img_div">
+			  <a href="" target="_blank"><img src="" width="48px" height="48px" /></a>
+			</div>
+			<div class="user_name_div">
+			  <a href="" target="_blank"></a>
+			</div>
+			<div class="user_screen_name_div">
+			  <a href="" target="_blank"></a>
+			</div>
+			<div class="user_delete_div">			 
+			</div>
+			<div class="user_time_div">			 
+			</div>
+			<div class="user_text_div">			 
+			</div> 
+		  </div>
+      </div>
+ 
+	  <div class="experts-table table table-striped">
+        <hr>
+	    <span id="experts-title">
+	      <h4>Experts: </h4> 
+	    </span>
+	    <table width="100%">  
           <thead>
 		    <tr>
 		      <th>Image</th>
@@ -87,9 +111,11 @@ $:render.header()
           <tbody>
           </tbody>
 		</table>
-      </div>
-	</div> 
-  </div>
+      </div>  <!- end div for class="experts-table table table-striped  -->
+ 
+	</div>  <!- end div for class="asking-div"  -->
+  </div> <!- end div for class="parent"  -->
+ 
 
 $:render.foot()
 
