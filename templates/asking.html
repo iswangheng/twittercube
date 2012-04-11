@@ -1,31 +1,30 @@
-$def with(session)
 $:render.header() 
 
   <div class="parent"> 
 	<div class="sidebar">
 	  <div class="userpic">
-		<a href="" target="_blank"><img src=$:session.user.profile_image_url width="64px" height="64px"/></a>
+		<a href="" target="_blank"><img src=user.profile_image_url width="64px" height="64px"/></a>
 	  </div>
 	  <div class="name">
-		<a href="" target="_blank">$:session.user.name</a>
+		<a href="" target="_blank">user.name</a>
 	  </div>
 	  <div class="screenname">
-		<a href="#" target="_blank">@$:session.user.screen_name</a>
+		<a href="#" target="_blank">@screen_name</a>
 	  </div>
 	  <div class="userlocation">
-		<a href="#" target="_blank">$:session.user.location</a>
+		<a href="#" target="_blank">user.location</a>
 	  </div>
 	  <hr>
 	  <table id="user_info_table" border="0" cellpadding="2"> 
 		<tr>
 		  <td>
-			<a href="#" target="_blank"><strong>$:session.user.statuses_count</strong></a> 
+			<a href="#" target="_blank"><strong>user.statuses_count</strong></a> 
 		  </td>
 		  <td>
-			<a href="#" target="_blank"><strong>$:session.user.friends_count</strong></a> 
+			<a href="#" target="_blank"><strong>user.friends_count</strong></a> 
 		  </td>
 		  <td>
-			<a href="#" target="_blank"><strong>$:session.user.followers_count</strong></a> 
+			<a href="#" target="_blank"><strong>user.followers_count</strong></a> 
 		  </td>
 		</tr>
 		<tr>
@@ -43,6 +42,7 @@ $:render.header()
 	</div>  <!--  end for class=sidebar div -->
 
 	<div class="asking-div">
+      <div class="form_class">
 	  <form class="form-horizonal" id="asking_form" method="POST">
 		<fieldset>
 		  <div class="control-group center">
@@ -67,10 +67,14 @@ $:render.header()
 		  </div>   <!--  end for class = 'tweet-button-sub-container' div -->
 		</fieldset>
 	  </form>
+      </div>
+	
+	  <div class="help_div"> 
+	  </div>
 
 	  <div class="category_div">
-		<label id="category-title"><h4>Category: &nbsp;&nbsp;</h4>
-		</label> 
+		<span id="category-title"><h4>Category: &nbsp;&nbsp;</h4>
+		</span> 
 		<text id="category" class="category"></text>
 	  </div>
 
@@ -94,7 +98,7 @@ $:render.header()
 			</div> 
 		  </div>
       </div>
- 
+
 	  <div class="experts-table table table-striped">
         <hr>
 	    <span id="experts-title">
@@ -112,7 +116,8 @@ $:render.header()
           </tbody>
 		</table>
       </div>  <!- end div for class="experts-table table table-striped  -->
- 
+  
+
 	</div>  <!- end div for class="asking-div"  -->
   </div> <!- end div for class="parent"  -->
  

@@ -4,6 +4,7 @@
 import web
 import json
 import os
+import sys
 import time
 import commands
 import twitter  
@@ -15,18 +16,27 @@ db = settings.db
 config = settings.config 
   
 
-def get_category(text):
-    savetestFile = open('testFile','w')
-    savetestFile.write(text)
-    savetestFile.close()
-    cmd = 'java -jar classifyText.jar ' + 'testFile'
+#This function uses the model I have trained already to classify the text
+#the model will return best category of the input text
+def get_category(text, test_file_name):
+    try:
+        savetestFile = open(test_file_name,'w')
+        savetestFile.write(text)
+        savetestFile.close()
+    except IOError, msg:
+        print "I/O error: %s" % msg
+    cmd = 'java -jar classifyText.jar %s' % test_file_name
     category = commands.getoutput(cmd)     
+    #now will delete this temp file
+    cmd = 'rm %s' % test_file_name
+    commands_result = commands.getoutput(cmd)
     index = category.index(':') + 1
     category = category[index:]
     category = category.strip()
     return category
 
 
+#used to convert the original category string for better looking
 def convert_category(cat):
     cat_dict = {'art&design': 'Art & Design'}
     cat_dict['autos'] = 'Autos'
@@ -45,6 +55,7 @@ def convert_category(cat):
     return cat_dict[cat]
 
 
+#query the database according to the category and get some experts of that area
 def get_experts(category):
     query_str = "SELECT username FROM experts ORDER BY " + category + " DESC LIMIT 5"
     result = db.query(query_str)
@@ -55,28 +66,7 @@ def get_experts(category):
     return experts
 
 
-#This function to process the time 'created_at' returned from the twitter api
-def get_time_str(time):
-    time_list = time.split(' ')
-    time_str = ""
-    hour_minute = "12:12"
-    am_pm = "PM"
-    day = "10"
-    month = "Sep"
-    year = "2012"
-    if len(time_list) == 6:
-        hour_minute = time_list[3]
-        hour_minute = hour_minute[:5]
-        day = time_list[2] 
-        month = time_list[1] 
-        year = time_list[5]
-        hour = hour_minute[0:2]
-        if int(hour) <= 12:
-            am_pm = 'AM'
-    time_str = hour_minute + ' ' + am_pm + ' - ' + day + ' ' + month + ' ' + year 
-    return time_str
-
-
+#just to get the api instance of tweepy
 def get_tweepAPI(session):
     auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET) 
     access_token_key = session.access_token_key
@@ -85,6 +75,8 @@ def get_tweepAPI(session):
     api = tweepy.API(auth)
     return api
 
+
+#to render the index page
 class Index:
     def GET(self):
         return render.index()
@@ -93,11 +85,16 @@ class Index:
         print 'post index'
         return
 
+#when user click the show experts button, will do the following
+#1. use the model to classify the question which is the input text in the textarea
+#2. invoke the get_experts() to get some experts of that area
+#3. return the best category the experts' detailed infomation
 class ShowExperts:
     def POST(self): 
         textarea = web.input().signal  
-        print 'textarea=', textarea 	
-        category = get_category(textarea) 
+        print 'textarea=', textarea 
+        test_file_name = web.web.ctx.session.session_id 
+        category = get_category(textarea, test_file_name) 
         print 'category--------> ', category
         if category == "art&design":
             db_column_category = "artdesign"
@@ -108,7 +105,7 @@ class ShowExperts:
         experts_list = get_experts(db_column_category)
         experts_detailed_list = []
         try:
-            api = get_tweepAPI(web.ctx.session)   
+            api = get_tweepAPI(web.ctx.session)    
             for expert in experts_list:
                 print "expert---> ", expert
                 user = api.get_user(screen_name=expert)
@@ -116,8 +113,9 @@ class ShowExperts:
                 description = user.description
                 expert_detailed = {"screen_name": expert, "profile_image_url":profile_image_url, "description":description}
                 experts_detailed_list.append(expert_detailed)
-        except:
+        except tweepy.TweepError, err_msg:
             experts_detailed_list = []
+            print err_msg 
         category = convert_category(category)
         data = {'category':category} 
         data.update({'experts_detailed_list':experts_detailed_list})
@@ -127,19 +125,22 @@ class ShowExperts:
         return data_string
 
 
+#when user click the ask them button
+#1. will update status
+#2. will for 2 seconds and get the user's latest tweet,
+#   just to check whether the update status action is successful or not
 class SubmitTweet:
     def POST(self):
         textarea = web.input().signal  
-        print 'textarea=', textarea 
-        api = get_tweepAPI(web.ctx.session)
-        tweet = 'From cube: '
-        tweet = tweet + textarea + '' 
+        api = get_tweepAPI(web.ctx.session) 
+        tweet = '' + textarea + '' 
+        print 'tweet textarea=', tweet 
         try:
             api.update_status(tweet)    
             time.sleep(2)
-        except:
+        except tweepy.TweepError, err_msg:
             #TODO here to handle the tweepy or api error
-            print 'here is an exception'
+            print err_msg
         try:
             user = api.me()
             user_img = user.profile_image_url
@@ -162,17 +163,22 @@ class SubmitTweet:
         data.update({'tweet_text': tweet_text})
         web.header('Content-Type', 'application/json')
         data_string = json.dumps(data)
-        return data_string       
+        return data_string      
 
 
+#when user click the view details button of the asking experts in the index page
+# will check if he has logged in or not
+# then take him to the right page
 class Asking:
     def GET(self):
         try:
-            return render.asking(web.ctx.session)
+            print "web.ctx.session.access_token_key: %s" % web.ctx.session.access_token_key
+            return render.asking()
         except AttributeError:
             web.seeother('sign_in_with_twitter')
 
 
+#when use click the sign in with twitter button
 class SignIn:
     def GET(self): 
         auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
@@ -187,6 +193,7 @@ class SignIn:
         web.seeother(redirect_url) 
 
 
+#when the twitter signing in action takes the user to the call back page
 class Callback:
     def GET(self):
         print 'call back page: '     
@@ -199,14 +206,13 @@ class Callback:
         auth.set_request_token(REQUEST_TOKEN_KEY, REQUEST_TOKEN_SECRET) 
         try:
             auth.get_access_token(verifier)
-            print "auth.access_token.key: ", auth.access_token.key
-            print "auth.access_token.secret: ", auth.access_token.secret
+            print "auth.access_token.key: %s" % auth.access_token.key
+            print "auth.access_token.secret: %s" % auth.access_token.secret
             web.ctx.session.access_token_key = auth.access_token.key
             web.ctx.session.access_token_secret = auth.access_token.secret
-            api = tweepy.API(auth) 
-            web.ctx.session.user = api.me()  
-        except tweepy.TweepError:
-            print 'Error! Failed to get access token.' 
+            api = tweepy.API(auth)   
+        except tweepy.TweepError, msg:
+            print 'Error: ', msg
         web.seeother('asking.html')  
 
 

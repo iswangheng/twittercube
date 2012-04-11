@@ -119,28 +119,43 @@ strong {
 }
 
 
-.category_div {
-	margin-top: 4px;
+.form_class {
+    float: left;
 }
 
-#category-title, .category {
-	display: inline; 
+.help_div { 
+    width: 280px;
+    height: 152px;
+    margin-top: 4px;
+    margin-left: 24px;     
+	background-color: #DEF; 
+    float: left;
+}
+
+.category_div {
+    clear: both;
+	margin-top: 4px;
+    margin-bottom: 5px
 }
 
 .experts-table {
+    clear: both;
 	width: 556px; 
     display: none;
 }
 
 .user_tweets_parent_div {
+	width: 556px;
+    height: 59px;
     display: none;
 }
 
 .user_tweet_div {
 	width: 556px;
-	padding: 3px;
-	background-color: #FFF;  
-    margin-top: 5px;
+    height: 100%;
+	padding: 3px; 
+	background-color: #FFF; 
+    margin-top: 10px;
     margin-bottom: 5px;
 }
 

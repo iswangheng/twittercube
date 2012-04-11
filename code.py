@@ -17,6 +17,7 @@ if web.ctx.get('_session') is None:
     print "!!!! init the session la !!!"
     web.ctx.session = session
 else:
+    print "@@@@ I already have session la @@@@@"
     session = web.ctx.session
 
 
