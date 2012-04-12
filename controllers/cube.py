@@ -175,18 +175,19 @@ class SubmitTweet:
             user_img = web.ctx.session.user_img
             user_name = web.ctx.session.user_name
             user_screen_name = web.ctx.session.user_screen_name  
-            #the reason why I reqeust 10 tweets below is for further use, like display them all in the page
+            #the reason why I request 5 tweets below is for further use, like display them all in the page
             #but i am not gonna use them right now because theres much more to be done, so I just use the latest tweet here
-            status_list = api.user_timeline(screen_name = user_screen_name, count=10)
+            status_list = api.user_timeline(screen_name = user_screen_name, count=5)
             print 'list 0 text;--------- ', status_list[0].created_at
             tweet_time = str(status_list[0].created_at) 
             tweet_text = status_list[0].text
         except:
+            print 'api.user_timeline ERROR......................'
             user_img = ""
             user_name = "ERROR"
             user_screen_name = "error"
             tweet_time = ".."
-            tweet_text = "The serve has encounted an error"
+            tweet_text = "The server has encounteredd an error"
         data = {'user_img': user_img} 
         data.update({'user_name': user_name}) 
         data.update({'user_screen_name': user_screen_name})
@@ -262,10 +263,11 @@ class SignIn:
         try:
             redirect_url = auth.get_authorization_url()
         except tweepy.TweepError:
-            print 'Error! Failed to get request token.' 
+            print 'Error! Failed to get request token.'
+       
         web.ctx.session.request_token_key = auth.request_token.key 
         web.ctx.session.request_token_secret = auth.request_token.secret  
-        print redirect_url
+        print "redirect_url: ", redirect_url
         web.seeother(redirect_url) 
 
 
@@ -277,6 +279,8 @@ class Callback:
         verifier = form.oauth_verifier  
         print 'web.ctx.session.session_id------->.', web.ctx.session.session_id
         auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)   
+        print "request_token_key: ", web.ctx.session.request_token_key
+        print "request_token_secret: ", web.ctx.session.request_token_secret
         REQUEST_TOKEN_KEY = web.ctx.session.request_token_key
         REQUEST_TOKEN_SECRET = web.ctx.session.request_token_secret
         auth.set_request_token(REQUEST_TOKEN_KEY, REQUEST_TOKEN_SECRET) 

@@ -100,6 +100,7 @@ jQuery('#show-experts').click(function() {
                 jQuery('.experts-table>table>tbody tr').remove()
 				var expertsList = data.experts_detailed_list;
                 var experts = ''; 
+                //ahhhhhh.... codes below are so dirty, remembe to rewrite them when im avaible
 				for(i = 0; i < expertsList.length; i++){
 					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
                     var expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
@@ -138,16 +139,26 @@ jQuery('#ask-them').click(function() {
             var tweet_time = data.tweet_time;
             var tweet_text = data.tweet_text;
             var user_link = "https://twitter.com/#!/" + user_screen_name;
+            var user_tweets_clone = jQuery('#user_tweet_div_1').clone();
+            jQuery('.user_tweet_div').remove();
+            var count = 3;
+			var id_num = "user_tweet_div_" + count; 
+            user_tweets_clone.attr('id', id_num);
+            user_tweets_clone.insertAfter(jQuery('#user_tweets'));
+            //user_tweets_clone.insertAfter(jQuery('.user_tweet_div')); 
             jQuery('.user_img_div img').attr('src', user_img);
             jQuery('.user_img_div>a').attr('href', user_link);
             jQuery('.user_name_div>a').attr('href',user_link);
             jQuery('.user_name_div>a').text(user_name);
             jQuery('.user_screen_name_div>a').text(user_screen_name);
             jQuery('.user_time_div').text(tweet_time);
-            jQuery('.user_text_div').text(tweet_text);
+            jQuery('.user_text_div').text(tweet_text);       
             jQuery('.user_tweets_parent_div').hide().fadeIn(1000);
+            
             jQuery('#ask-them').button('reset');
-            update_user_info();
+			//not using this fuction below, cuz its very time consuming and api is not stable while in HKUST campus. 
+			//should improve later by better methods in the future
+            //update_user_info();
         }
 	});
     return false;
