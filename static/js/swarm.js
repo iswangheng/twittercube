@@ -11,16 +11,17 @@ jQuery(function(){
 
  
 
-//asking.html:	show the user info
+//asking.html:	show the user info, including 5 latest tweets
 function show_user_info(){
-	var post_data = "show user info"
+	var post_data = "show user info";
 	jQuery.ajax({
         url: 'show_user_info',
 		type: 'POST', 
 		data: {signal: post_data},
         dataType: 'json',
-		success: function(data){      
-			var user_link = "https://twitter.com/#!/" + data.user_screen_name;
+		success: function(data){     
+            var user_tweets_list = data.user_tweets_list;
+            var user_link = "https://twitter.com/#!/" + data.user_screen_name;
             jQuery('.userpic img').attr("src", data.user_img);
  			jQuery('.name>a').text(data.user_name);  
  			jQuery('.screenname>a').text('@' + data.user_screen_name);  
@@ -33,32 +34,37 @@ function show_user_info(){
 			jQuery('.screenname a').attr("href", user_link); 
 			jQuery('.userlocation a').attr("href", user_link);
 			jQuery('#user_info_table  a').attr("href", user_link);
+            var user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
+            jQuery('.user_tweet_div').remove(); 
+            var count = 0
+            for(count = 0; count < 5; count++){
+            	var id_num = "user_tweet_div_" + count; 
+                var delete_div_id = "tweet_delete_div_" + count;
+                user_tweets_clone.attr('id', id_num);
+                user_tweets_clone.insertAfter(jQuery('#user_tweets'));
+				user_tweets_clone = jQuery('#user_tweet_div_0').clone();
+                var id_time_selector = '#' + id_num + '>.tweet_time_div';
+                var id_text_selector = '#' + id_num + '>.tweet_text_div'; 
+                var id_tweet_id_selector = '#' + id_num + '>.tweet_id_input'; 
+                var id_tweet_delete_selector = '#' + id_num + '>.tweet_delete_div'; 
+            	jQuery(id_time_selector).text(user_tweets_list[count].tweet_time);
+            	jQuery(id_text_selector).text(user_tweets_list[count].tweet_text);
+           		jQuery(id_tweet_id_selector).val(user_tweets_list[count].tweet_id);  
+           		jQuery(id_tweet_delete_selector).attr('id', delete_div_id);  
+            }
+            jQuery('.user_img_div img').attr('src', data.user_img);
+            jQuery('.user_img_div>a').attr('href', user_link);
+            jQuery('.user_name_div>a').attr('href',user_link);
+            jQuery('.user_name_div>a').text(data.user_name);
+            jQuery('.user_screen_name_div>a').text('@' + data.user_screen_name);      
+            jQuery('.user_tweets_parent_div').hide().fadeIn(1000); 		
+			jQuery('.tweet_delete_div').hide().fadeIn(100); 
+			delete_tweet_handler(); 
 			}
 		});
     return false;
 }
-
-
-//asking.html:	update the user info
-function update_user_info(){
-	var post_data = "update_user_info"
-	jQuery.ajax({
-        url: 'update_user_info',
-		type: 'POST', 
-		data: {signal: post_data},
-        dataType: 'json',
-		success: function(data){
-			jQuery('.userpic img').attr("src", data.user_img);
- 			jQuery('.name>a').text(data.user_name);    
- 			jQuery('.userlocation>a').text(data.user_location); 
- 			jQuery('#statuses_count').text(data.user_statuses_count);  
- 			jQuery('#following_count').text(data.user_following_count);  
- 			jQuery('#followers_count').text(data.user_followers_count); 
-			}
-		});
-    return false;
-}
-
+       
 
 //asking.html:	monitor the textarea, change the state of the button and word counter
 jQuery('#textarea').keyup(monitor_textarea); 
@@ -100,7 +106,7 @@ jQuery('#show-experts').click(function() {
                 jQuery('.experts-table>table>tbody tr').remove()
 				var expertsList = data.experts_detailed_list;
                 var experts = ''; 
-                //ahhhhhh.... codes below are so dirty, remembe to rewrite them when im avaible
+                //TODO ahhhhhh.... codes below are so dirty, remembe to rewrite them when im avaible
 				for(i = 0; i < expertsList.length; i++){
 					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
                     var expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
@@ -123,6 +129,14 @@ jQuery('#show-experts').click(function() {
 });
 
 
+
+//asking.html:   when click the experts, toggle the table
+jQuery('#experts-title').click(function() {     
+	jQuery('#experts-table-inside').toggle();
+});
+
+
+//asking.html:	ask-them button!
 jQuery('#ask-them').click(function() {  
     jQuery(this).button('loading'); 
     jQuery(this).popover('hide');
@@ -133,33 +147,82 @@ jQuery('#ask-them').click(function() {
 		data: {signal: post_data},
         dataType: 'json',
         success: function(data) { 
-            var user_img = data.user_img;
-            var user_name = data.user_name;
-            var user_screen_name = data.user_screen_name;
-            var tweet_time = data.tweet_time;
-            var tweet_text = data.tweet_text;
-            var user_link = "https://twitter.com/#!/" + user_screen_name;
-            var user_tweets_clone = jQuery('#user_tweet_div_1').clone();
-            jQuery('.user_tweet_div').remove();
-            var count = 3;
-			var id_num = "user_tweet_div_" + count; 
-            user_tweets_clone.attr('id', id_num);
-            user_tweets_clone.insertAfter(jQuery('#user_tweets'));
-            //user_tweets_clone.insertAfter(jQuery('.user_tweet_div')); 
-            jQuery('.user_img_div img').attr('src', user_img);
+            var user_tweets_list = data.user_tweets_list;
+            var user_link = "https://twitter.com/#!/" + data.user_screen_name;
+            var user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
+            jQuery('.user_tweet_div').remove(); 
+            var count = 0
+            for(count = 0; count < 5; count++){
+            	var id_num = "user_tweet_div_" + count; 
+                var delete_div_id = "tweet_delete_div_" + count;
+                user_tweets_clone.attr('id', id_num);
+                user_tweets_clone.insertAfter(jQuery('#user_tweets'));
+				user_tweets_clone = jQuery('#user_tweet_div_0').clone();
+                var id_time_selector = '#' + id_num + '>.tweet_time_div';
+                var id_text_selector = '#' + id_num + '>.tweet_text_div'; 
+                var id_tweet_id_selector = '#' + id_num + '>.tweet_id_input'; 
+                var id_tweet_delete_selector = '#' + id_num + '>.tweet_delete_div'; 
+            	jQuery(id_time_selector).text(user_tweets_list[count].tweet_time);
+            	jQuery(id_text_selector).text(user_tweets_list[count].tweet_text);
+           		jQuery(id_tweet_id_selector).val(user_tweets_list[count].tweet_id);  
+           		jQuery(id_tweet_delete_selector).attr('id', delete_div_id);  
+            }
+            jQuery('.user_img_div img').attr('src', data.user_img);
             jQuery('.user_img_div>a').attr('href', user_link);
             jQuery('.user_name_div>a').attr('href',user_link);
-            jQuery('.user_name_div>a').text(user_name);
-            jQuery('.user_screen_name_div>a').text(user_screen_name);
-            jQuery('.user_time_div').text(tweet_time);
-            jQuery('.user_text_div').text(tweet_text);       
-            jQuery('.user_tweets_parent_div').hide().fadeIn(1000);
-            
+            jQuery('.user_name_div>a').text(data.user_name);
+            jQuery('.user_screen_name_div>a').text('@' + data.user_screen_name); 
+            jQuery('.tweet_id_input').text(data.tweet_id); 
+		    jQuery('.experts-table').hide();    
+            jQuery('.user_tweets_parent_div').hide().fadeIn(1000); 		
+			jQuery('.tweet_delete_div').hide().fadeIn(100); 
+			delete_tweet_handler(); 
             jQuery('#ask-them').button('reset');
-			//not using this fuction below, cuz its very time consuming and api is not stable while in HKUST campus. 
-			//should improve later by better methods in the future
-            //update_user_info();
         }
 	});
     return false;
 });
+ 
+//asking.html:  handle the delete option 
+function delete_tweet_handler(){
+	tweet_id = 1;
+	jQuery('#tweet_delete_div_0').click(function(){ 
+        tweet_id = jQuery(this).parent().find('.tweet_id_input').val(); 
+        alert(tweet_id);  
+		//TODO
+		delete_tweet_ajax(tweet_id);
+	});
+	jQuery('#tweet_delete_div_1').click(function(){
+        tweet_id = jQuery(this).parent().find('.tweet_id_input').val();
+		delete_tweet_ajax(tweet_id, '#tweet_delete_div_0'); 
+	});
+	jQuery('#tweet_delete_div_2').click(function(){
+        tweet_id = jQuery(this).parent().find('.tweet_id_input').val();
+		delete_tweet_ajax(tweet_id, '#tweet_delete_div_0'); 
+	});
+	jQuery('#tweet_delete_div_3').click(function(){
+        tweet_id = jQuery(this).parent().find('.tweet_id_input').val();
+		delete_tweet_ajax(tweet_id, '#tweet_delete_div_0'); 
+	});
+	jQuery('#tweet_delete_div_4').click(function(){
+        tweet_id = jQuery(this).parent().find('.tweet_id_input').val();
+		delete_tweet_ajax(tweet_id, '#tweet_delete_div_0'); 
+	});
+}
+
+//asking.html:	sub function used in the delete_tweet_handler() function 
+		//TODO
+function delete_tweet_ajax(tweet_id) {
+    var post_data = tweet_id; 	 
+	jQuery.ajax({
+        url: 'delete_tweet',
+		type: 'POST',
+		data: {signal: post_data}, 
+        success: function(data) {
+			//jQuery(dom).parent().hide();
+ 	    }
+	});
+    return false;
+}
+
+ 

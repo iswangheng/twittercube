@@ -15,7 +15,9 @@ config = web.storage(
     static = '/static',
     CONSUMER_KEY = "Bim7MtyWZjYvYIqImZWw",
     CONSUMER_SECRET = "zwGggVuRJsDoomJWl8GJUGxQcPUi7OUVkbtgOOLpx0w",
-    CALLBACK = "/callback",   
+    CALLBACK = "/callback",  
+    #Below the the UTC +8 timezone, in the sub app may need to change according to the users timezone!!!! 
+    utc_offset = 8, 
 )
 
 

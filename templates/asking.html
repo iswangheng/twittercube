@@ -97,10 +97,10 @@ $:render.header()
 
 	  <div class="experts-table table table-striped">
         <hr>
-	    <span id="experts-title">
-	      <h4>Experts: </h4> 
+	    <span id="experts-title" title="Click here to toggle the table below" onmouseover="jQuery(this).tooltip('show')">
+	      <h4><a href='#'>Experts: </a></h4> 
 	    </span>
-	    <table width="100%">  
+	    <table id="experts-table-inside" width="100%">  
           <thead>
 		    <tr>
 		      <th>Image</th>
@@ -116,7 +116,7 @@ $:render.header()
 
       <div class="user_tweets_parent_div">
 		  <span id="user_tweets"><h4>Tweets: </h4> </span>
-		  <div class="user_tweet_div" id="user_tweet_div_1">
+		  <div class="user_tweet_div" id="user_tweet_div_0">
 			<div class="user_img_div">
 			  <a href="" target="_blank"><img src="" width="48px" height="48px" /></a>
 			</div>
@@ -126,9 +126,10 @@ $:render.header()
 			<div class="user_screen_name_div">
 			  <a href="" target="_blank"></a>
 			</div>
-			<div class="user_delete_div"></div>
-			<div class="user_time_div"></div>
-			<div class="user_text_div">	</div>  
+			<div class="tweet_delete_div"><a href="#">delete</a></div>
+			<div class="tweet_time_div"> </div>
+			<div class="tweet_text_div"> </div>  
+            <input type="hidden" class="tweet_id_input"></input> 
 		  </div>
       </div>
 

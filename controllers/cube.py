@@ -9,12 +9,11 @@ import time
 import commands
 import twitter  
 import tweepy 
-from config import settings 
+from config import settings  
 
 render = settings.render
 db = settings.db 
-config = settings.config 
-  
+config = settings.config  
 
 #This function uses the model I have trained already to classify the text
 #the model will return best category of the input text
@@ -76,6 +75,48 @@ def get_tweepAPI(session):
     return api
 
 
+#convert the datetime of twitter api to the local time using utc_offset
+def get_local_time(datetime):
+    #TODO utc_offset needs to be modified according to the visitors timezone!!
+    #     change the code below in the future 
+    utc_offset = config.utc_offset 
+    datetime = str(datetime)
+    #TODO remained to be done......
+    local_time = datetime  
+    return local_time
+
+
+
+#this function is to return a dict object of user tweets(5 tweets inside), also including the user info
+def get_user_tweets(session):
+    user_tweets_list = []
+    user_screen_name = session.user_screen_name
+    try:  
+        api = get_tweepAPI(session) 
+        status_list = api.user_timeline(screen_name = user_screen_name, count=5) 
+        for status in status_list:
+            tweet_dict = {"tweet_time": get_local_time(status.created_at)}
+            tweet_dict.update({"tweet_text": status.text})
+            tweet_dict.update({"tweet_id": status.id})
+            user_tweets_list.append(tweet_dict) 
+    except:
+        print 'api.user_timeline ERROR......................'  
+    user_tweets_list.reverse()
+    for user_tweets in user_tweets_list:
+        print "time: %s text: %s id: %s" % (user_tweets['tweet_time'], user_tweets['tweet_text'], user_tweets['tweet_id'])
+    return user_tweets_list
+
+
+#this function returns the json data that needs to be sent back to the browser
+# the json data is a list containing the 5 latest tweets of current user
+def get_tweets_list(session):
+    user_screen_name = session.user_screen_name
+    user_tweets_list = get_user_tweets(session)
+    data = {'user_screen_name': user_screen_name}   
+    data.update({'user_tweets_list': user_tweets_list})
+    data_string = json.dumps(data)
+    return data_string
+
 #store the current user info into the session
 # of course we need to use the api to get the current user info
 def store_user_into_session(api):
@@ -103,7 +144,7 @@ def store_user_into_session(api):
     web.ctx.session.user_statuses_count = user_statuses_count
     web.ctx.session.user_following_count = user_following_count
     web.ctx.session.user_followers_count = user_followers_count
-    print 'web.ctx.session %s' % web.ctx.session.user_name 
+    print 'web.ctx.session.user_name %s' % web.ctx.session.user_name 
 
 
 #to render the index page
@@ -163,39 +204,33 @@ class SubmitTweet:
     def POST(self):
         textarea = web.input().signal  
         api = get_tweepAPI(web.ctx.session) 
-        tweet = '' + textarea + '' 
+        tweet = str(textarea)
         print 'tweet textarea=', tweet 
         try:
             api.update_status(tweet)    
             time.sleep(2)
         except tweepy.TweepError, err_msg:
             #TODO here to handle the tweepy or api error
-            print err_msg
-        try: 
-            user_img = web.ctx.session.user_img
-            user_name = web.ctx.session.user_name
-            user_screen_name = web.ctx.session.user_screen_name  
-            #the reason why I request 5 tweets below is for further use, like display them all in the page
-            #but i am not gonna use them right now because theres much more to be done, so I just use the latest tweet here
-            status_list = api.user_timeline(screen_name = user_screen_name, count=5)
-            print 'list 0 text;--------- ', status_list[0].created_at
-            tweet_time = str(status_list[0].created_at) 
-            tweet_text = status_list[0].text
-        except:
-            print 'api.user_timeline ERROR......................'
-            user_img = ""
-            user_name = "ERROR"
-            user_screen_name = "error"
-            tweet_time = ".."
-            tweet_text = "The server has encounteredd an error"
-        data = {'user_img': user_img} 
-        data.update({'user_name': user_name}) 
-        data.update({'user_screen_name': user_screen_name})
-        data.update({'tweet_time': tweet_time})
-        data.update({'tweet_text': tweet_text})
+            print err_msg 
         web.header('Content-Type', 'application/json')
-        data_string = json.dumps(data)
+        data_string = get_tweets_list(web.ctx.session)
         return data_string      
+
+
+#when use click delete
+# this tweet should be deleted..
+class DeleteTweet:
+    def POST(self):
+        tweet_id = web.input().signal
+        api = get_tweepAPI(web.ctx.session) 
+        print 'tweet id= %s', tweet_id 
+        try:
+            api.destroy_status(tweet_id);
+        except tweepy.TweepError, err_msg:
+            #TODO here to handle the tweepy or api error
+            print err_msg 
+        return "okay"
+
 
 
 #when user click the view details button of the asking experts in the index page
@@ -205,6 +240,7 @@ class Asking:
     def GET(self):
         try:
             print "web.ctx.session.access_token_key: %s" % web.ctx.session.access_token_key
+            print "web.ctx.session.access_token_secret: %s" % web.ctx.session.access_token_secret 
             api = get_tweepAPI(web.ctx.session) 
             store_user_into_session(api)    
             return render.asking()
@@ -218,6 +254,7 @@ class Asking:
 class ShowUserInfo:
     def POST(self):    
         session = web.ctx.session     
+        print "will show the user info, session.user_screen_name is : %s" % session.user_screen_name
         data = {'user_img': session.user_img} 
         data.update({'user_name': session.user_name}) 
         data.update({'user_screen_name': session.user_screen_name}) 
@@ -225,35 +262,11 @@ class ShowUserInfo:
         data.update({'user_statuses_count': session.user_statuses_count}) 
         data.update({'user_following_count': session.user_following_count}) 
         data.update({'user_followers_count': session.user_followers_count}) 
-        web.header('Content-Type', 'application/json')
+        user_tweets_list = get_user_tweets(web.ctx.session)   
+        data.update({'user_tweets_list': user_tweets_list})
         data_string = json.dumps(data)
+        web.header('Content-Type', 'application/json')
         return data_string      
-
-
-#when the user has clicked the ask-them button
-# which means that he submitted one tweet
-# so the tweet count number in the page should be updated
-# but here we update all the info just in case 
-class UpdateUserInfo:
-    def POST(self):           
-        api = get_tweepAPI(web.ctx.session)     
-        user = api.me() 
-        user_img = user.profile_image_url
-        user_name = user.name 
-        user_location = user.location 
-        user_statuses_count = user.statuses_count
-        user_following_count = user.friends_count
-        user_followers_count = user.followers_count 
-        user_statuses_count = user.statuses_count
-        data = {'user_statuses_count': user_img} 
-        data.update({'user_name': user_name})  
-        data.update({'user_location': user_location}) 
-        data.update({'user_statuses_count': user_statuses_count}) 
-        data.update({'user_following_count': user_following_count}) 
-        data.update({'user_followers_count': user_followers_count}) 
-        web.header('Content-Type', 'application/json')
-        data_string = json.dumps(data)
-        return data_string   
  
 
 #when use click the sign in with twitter button
@@ -263,8 +276,7 @@ class SignIn:
         try:
             redirect_url = auth.get_authorization_url()
         except tweepy.TweepError:
-            print 'Error! Failed to get request token.'
-       
+            print 'Error! Failed to get request token.'       
         web.ctx.session.request_token_key = auth.request_token.key 
         web.ctx.session.request_token_secret = auth.request_token.secret  
         print "redirect_url: ", redirect_url
@@ -276,8 +288,7 @@ class Callback:
     def GET(self):
         print 'call back page: '     
         form = web.input() 
-        verifier = form.oauth_verifier  
-        print 'web.ctx.session.session_id------->.', web.ctx.session.session_id
+        verifier = form.oauth_verifier   
         auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)   
         print "request_token_key: ", web.ctx.session.request_token_key
         print "request_token_secret: ", web.ctx.session.request_token_secret
@@ -286,8 +297,6 @@ class Callback:
         auth.set_request_token(REQUEST_TOKEN_KEY, REQUEST_TOKEN_SECRET) 
         try:
             auth.get_access_token(verifier)
-            print "auth.access_token.key: %s" % auth.access_token.key
-            print "auth.access_token.secret: %s" % auth.access_token.secret
             web.ctx.session.access_token_key = auth.access_token.key
             web.ctx.session.access_token_secret = auth.access_token.secret
         except tweepy.TweepError, msg:
