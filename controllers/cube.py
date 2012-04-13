@@ -91,19 +91,21 @@ def get_local_time(datetime):
 def get_user_tweets(session):
     user_tweets_list = []
     user_screen_name = session.user_screen_name
+    print " get_user_tweets(session): user_screen_name: %s" %user_screen_name
     try:  
         api = get_tweepAPI(session) 
-        status_list = api.user_timeline(screen_name = user_screen_name, count=5) 
+        status_list = api.user_timeline(include_rts='true', screen_name = user_screen_name, count=5) 
         for status in status_list:
             tweet_dict = {"tweet_time": get_local_time(status.created_at)}
             tweet_dict.update({"tweet_text": status.text})
             tweet_dict.update({"tweet_id": status.id})
             user_tweets_list.append(tweet_dict) 
+            print "BEFORE..tweet_text: %s" % tweet_text
+            user_tweets_list.reverse()
+        for user_tweets in user_tweets_list:
+            print "time: %s text: %s id: %s" % (user_tweets['tweet_time'], user_tweets['tweet_text'], user_tweets['tweet_id'])
     except:
         print 'api.user_timeline ERROR......................'  
-    user_tweets_list.reverse()
-    for user_tweets in user_tweets_list:
-        print "time: %s text: %s id: %s" % (user_tweets['tweet_time'], user_tweets['tweet_text'], user_tweets['tweet_id'])
     return user_tweets_list
 
 
@@ -130,13 +132,13 @@ def store_user_into_session(api):
         user_following_count = user.friends_count
         user_followers_count = user.followers_count 
     except:
-        user_img = ""
-        user_name = "ERROR"
-        user_screen_name = 'error'
+        user_img = "http://a0.twimg.com/profile_images/459277408/logo1_normal.jpg"
+        user_name = "笨笨"
+        user_screen_name = 'cnjswangheng'
         user_location = 'Hong Kong'
-        user_statuses_count = 123
-        user_following_count = 456
-        user_followers_count = 789 
+        user_statuses_count = 1713
+        user_following_count = 421
+        user_followers_count = 184 
     web.ctx.session.user_img = user_img
     web.ctx.session.user_name = user_name
     web.ctx.session.user_screen_name = user_screen_name
@@ -240,11 +242,10 @@ class Asking:
     def GET(self):
         try:
             print "web.ctx.session.access_token_key: %s" % web.ctx.session.access_token_key
-            print "web.ctx.session.access_token_secret: %s" % web.ctx.session.access_token_secret 
-            api = get_tweepAPI(web.ctx.session) 
-            store_user_into_session(api)    
+            print "web.ctx.session.access_token_secret: %s" % web.ctx.session.access_token_secret     
             return render.asking()
         except AttributeError:
+            print "ERROR...access token key and secret NOT found !!"
             web.seeother('sign_in_with_twitter')
 
 
@@ -275,33 +276,41 @@ class SignIn:
         auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)
         try:
             redirect_url = auth.get_authorization_url()
+            web.ctx.session.request_token_key = auth.request_token.key 
+            web.ctx.session.request_token_secret = auth.request_token.secret     
+            print "redirect_url: ", redirect_url
+            web.seeother(redirect_url) 
         except tweepy.TweepError:
-            print 'Error! Failed to get request token.'       
-        web.ctx.session.request_token_key = auth.request_token.key 
-        web.ctx.session.request_token_secret = auth.request_token.secret  
-        print "redirect_url: ", redirect_url
-        web.seeother(redirect_url) 
+            print 'Error! Failed to get request token.'  
+            web.seeother('sign_in_with_twitter')   
 
 
 #when the twitter signing in action takes the user to the call back page
 class Callback:
     def GET(self):
-        print 'call back page: '     
-        form = web.input() 
-        verifier = form.oauth_verifier   
-        auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET)   
-        print "request_token_key: ", web.ctx.session.request_token_key
-        print "request_token_secret: ", web.ctx.session.request_token_secret
+        print 'call back page: '      
+        auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET) 
         REQUEST_TOKEN_KEY = web.ctx.session.request_token_key
-        REQUEST_TOKEN_SECRET = web.ctx.session.request_token_secret
+        REQUEST_TOKEN_SECRET = web.ctx.session.request_token_secret  
+        print "request_token_key: ",  REQUEST_TOKEN_KEY 
+        print "request_token_secret: ", REQUEST_TOKEN_SECRET
         auth.set_request_token(REQUEST_TOKEN_KEY, REQUEST_TOKEN_SECRET) 
         try:
-            auth.get_access_token(verifier)
+            form = web.input() 
+            verifier = form.oauth_verifier  
+            print '---->form.oauth_verifier:  %s' % verifier
+            try:
+                auth.get_access_token(verifier)
+            except tweepy.TweepError, err:
+                print 'Error.. Failed to get access token ---->%s' % err 
             web.ctx.session.access_token_key = auth.access_token.key
             web.ctx.session.access_token_secret = auth.access_token.secret
-        except tweepy.TweepError, msg:
-            print 'Error: ', msg
-        web.seeother('asking.html')  
+        except:
+            print 'Error: ', sys.exc_info()[0]
+        print 'will now go to the asking.html' 
+        api = get_tweepAPI(web.ctx.session) 
+        store_user_into_session(api)
+        web.seeother('asking.html')   
 
 
 class Others:
