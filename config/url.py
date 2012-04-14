@@ -9,6 +9,7 @@ urls = (
      '/callback',       pre_fix + 'cube.Callback',
      '/asking.html',    pre_fix + 'cube.Asking',
      '/show_user_info',    pre_fix + 'cube.ShowUserInfo',  
+     '/show_user_tweets',  pre_fix + 'cube.ShowUserTweets',
      '/show_experts',   pre_fix + 'cube.ShowExperts',
      '/submit_tweet',    pre_fix + 'cube.SubmitTweet', 
 	 '/delete_tweet',    pre_fix + 'cube.DeleteTweet',
