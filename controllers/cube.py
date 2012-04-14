@@ -68,6 +68,45 @@ def get_experts(category):
     return experts
 
 
+#Removes the @*** from the text
+def remove_at(text):
+    text_without_at = ''
+    start_index = text.find('@')
+    if start_index == -1:
+        text_without_at = text
+    else:
+        i = start_index
+        while i < len(text):
+            if text[i] == ' ':
+                break
+            i = i + 1    
+        end_index = i 
+        text_without_at = text[0:start_index] + text[end_index:] 
+        text_without_at = remove_at(text_without_at)
+    return text_without_at
+
+
+#query the database to get 6 latest questions people are asking
+def get_questions():
+    query_str = "SELECT question, username FROM questions ORDER BY id DESC LIMIT 6"
+    result = db.query(query_str)
+    question_list = []
+    for row in result: 
+        question = remove_at(row.question)
+        question_dict = {'question': question}
+        question_list.append(question_dict) 
+    return question_list
+
+
+#store the question into the database named questions
+def store_question(text, name):
+    try:
+        db.insert('questions', username=str(name), question=text)
+        print "!!!!#####insert db@@@############"
+    except:
+        print "db insert error"
+
+
 #just to get the api instance of tweepy
 def get_tweepAPI(session):
     auth = tweepy.OAuthHandler(config.CONSUMER_KEY, config.CONSUMER_SECRET) 
@@ -89,6 +128,66 @@ def get_local_time(datetime):
     return local_time
 
 
+#to add the http link to the @** in the tweets
+def add_at_http(text):
+    text_http = ''
+    start_index = text.find('@')    
+    if start_index == -1:
+        text_http = text
+    else:
+        left_str = text[0:start_index]
+        i = start_index
+        while i < len(text):
+            if text[i] == ' ':
+                break
+            i = i + 1    
+        end_index = i 
+        at_str = text[start_index:end_index]
+        at_str = "<a href=https://twitter.com/#!/%s target='_blank'>%s</a>" % (at_str,at_str)
+        right_str = text[end_index:]
+        text_http = left_str + at_str + add_at_http(right_str)
+    return text_http
+
+#to add the http link to the http:// in the tweets
+def add_http_link(text):
+    text_http = ''
+    start_index = text.find('http://')    
+    if start_index == -1:
+        text_http = text
+    else:
+        left_str = text[0:start_index]
+        i = start_index
+        while i < len(text):
+            if text[i] == ' ':
+                break
+            i = i + 1    
+        end_index = i 
+        http_str = text[start_index:end_index]
+        http_str = "<a href=%s target='_blank'>%s</a>" % (http_str,http_str)
+        right_str = text[end_index:]
+        text_http = left_str + http_str + add_at_http(right_str)
+    return text_http
+
+#to add the http link to the https:// in the tweets
+def add_https_link(text):
+    text_http = ''
+    start_index = text.find('https://')    
+    if start_index == -1:
+        text_http = text
+    else:
+        left_str = text[0:start_index]
+        i = start_index
+        while i < len(text):
+            if text[i] == ' ':
+                break
+            i = i + 1    
+        end_index = i 
+        http_str = text[start_index:end_index]
+        http_str = "<a href=%s target='_blank'>%s</a>" % (http_str,http_str)
+        right_str = text[end_index:]
+        text_http = left_str + http_str + add_at_http(right_str)
+    return text_http
+
 
 #this function is to return a dict object of user tweets(5 tweets inside), also including the user info
 def get_user_tweets(session):
@@ -100,7 +199,10 @@ def get_user_tweets(session):
         status_list = api.user_timeline(include_rts='true', screen_name = user_screen_name, count=5)   #TODO i dont know why here is 6, only returns 5 tweets..
         for status in status_list:
             tweet_dict = {"tweet_time": get_local_time(status.created_at)}
-            tweet_dict.update({"tweet_text": status.text})
+            tweet_text = add_http_link(status.text)
+            tweet_text = add_https_link(tweet_text)
+            tweet_text = add_at_http(tweet_text)
+            tweet_dict.update({"tweet_text": tweet_text})
             tweet_dict.update({"tweet_id": str(status.id)})
             user_tweets_list.append(tweet_dict)  
     except:
@@ -203,6 +305,7 @@ class SubmitTweet:
         textarea = web.input().signal  
         tweet = str(textarea)
         print 'tweet textarea=', tweet 
+        store_question(tweet, web.ctx.session.user_screen_name)
         try:
             api = get_tweepAPI(web.ctx.session) 
             api.update_status(tweet)    
@@ -247,7 +350,7 @@ class Asking:
 
 #when the user has come to the asking.html page
 # which means that he has logged in
-# so this class is to process the ajax of showing user info
+# so this class is to process the ajax of showing user info and 5 latest quesionts
 class ShowUserInfo:
     def POST(self):    
         session = web.ctx.session     
@@ -258,11 +361,14 @@ class ShowUserInfo:
         data.update({'user_location': session.user_location}) 
         data.update({'user_statuses_count': session.user_statuses_count}) 
         data.update({'user_following_count': session.user_following_count}) 
-        data.update({'user_followers_count': session.user_followers_count})  
+        data.update({'user_followers_count': session.user_followers_count}) 
+        print "will show the user 5 latest questions"  
+        question_list = get_questions()
+        data.update({'question_list': question_list})     
         data_string = json.dumps(data)
         web.header('Content-Type', 'application/json')
-        return data_string      
-
+        return data_string    
+   
 
 #when the user has come to the asking.html page
 # which means that he has logged in
