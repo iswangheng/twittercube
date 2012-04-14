@@ -3,47 +3,77 @@ $:render.header()
 
   <div class="parent">   
 	<div class="sidebar">
-	  <div class="userpic">
-		<a href="" target="_blank"><img src="" width="64px" height="64px"/></a>
-	  </div>
-	  <div class="name">
-		<a href="" target="_blank">name</a>
-	  </div>
-	  <div class="screenname">
-		<a href="#" target="_blank">@screen_name</a>
-	  </div>
-	  <div class="userlocation">
-		<a href="#" target="_blank">location</a>
-	  </div>
-	  <hr>
-	  <table id="user_info_table" border="0" cellpadding="2"> 
-		<tr>
-		  <td>
-            <label>
-			<a href="#" target="_blank"><strong id="statuses_count">111</strong></a>
-            </label> 
-		  </td>
-		  <td>  
-			<a href="#" target="_blank"><strong id="following_count">222</strong></a> 
-		  </td>
-		  <td>
-			<a href="#" target="_blank"><strong id="followers_count">333</strong></a> 
-		  </td>
-		</tr>
-		<tr>
-		  <td>
-			<a href="#" target="_blank">TWEETS</a> 
-		  </td>
-		  <td>
-			<a href="#" target="_blank">FOLLOWING</a> 			
-		  </td>
-		  <td>
-			<a href="#" target="_blank">FOLLOWERS</a> 			
-		  </td>
-		</tr>
-	  </table>
+  	    <div class="sidebar_user_info">
+		  <div class="userpic">
+			<a href="" target="_blank"><img src="" width="64px" height="64px"/></a>
+		  </div>
+		  <div class="name">
+			<a href="" target="_blank">name</a>
+		  </div>
+		  <div class="screenname">
+			<a href="#" target="_blank">@screen_name</a>
+		  </div>
+		  <div class="userlocation">
+			<a href="#" target="_blank">location</a>
+		  </div>
+		  <hr>
+		  <table id="user_info_table" border="0" cellpadding="2"> 
+			<tr>
+			  <td>
+		        <label>
+				<a href="#" target="_blank"><strong id="statuses_count">111</strong></a>
+		        </label> 
+			  </td>
+			  <td>  
+				<a href="#" target="_blank"><strong id="following_count">222</strong></a> 
+			  </td>
+			  <td>
+				<a href="#" target="_blank"><strong id="followers_count">333</strong></a> 
+			  </td>
+			</tr>
+			<tr>
+			  <td>
+				<a href="#" target="_blank">TWEETS</a> 
+			  </td>
+			  <td>
+				<a href="#" target="_blank">FOLLOWING</a> 			
+			  </td>
+			  <td>
+				<a href="#" target="_blank">FOLLOWERS</a> 			
+			  </td>
+			</tr>
+		  </table>
+		</div>  <!--  end for class=sidebar_user_info div -->
+
+		<div class="sidebar_questions"> 
+	      <h4>People are asking: </h4>  
+		  <table class="table" id="asking-table" width="100%">  
+		    <thead> 
+		    </thead>
+		    <tbody>    
+			  <tr>
+			  <td>one</td>
+ 			  </tr>
+			  <tr>
+			  <td>two</td>
+ 			  </tr>
+			  <tr>
+			  <td>three</td>
+ 			  </tr>
+			  <tr>
+			  <td>four</td>
+ 			  </tr>
+			  <tr>
+			  <td>five</td>
+ 			  </tr> 
+		    </tbody>
+		  </table>
+		</div> <!--  end for class=sidebar_questions div -->
+
 	</div>  <!--  end for class=sidebar div -->
 
+
+     <!-- asking-div start right -->
 	<div class="asking-div">
       <div class="form_class">
 	  <form class="form-horizonal" id="asking_form" method="POST">
@@ -69,8 +99,8 @@ $:render.header()
 			</button> 
 		  </div>   <!--  end for class = 'tweet-button-sub-container' div -->
 		</fieldset>
-	  </form>
-      </div>
+	  </form>  
+      </div>  <!--  end for class = 'form_class' div -->
 	
 	  <div class="help_div"> 
         <span class="label label-important">How to Use?</span>
@@ -88,7 +118,7 @@ $:render.header()
             Click the blue button to submit your tweet!
           </dd>      
         </dl>
-	  </div>
+	  </div> <!--  end for class = 'help_div' div -->
 
 	  <div class="category_div">
 		<span id="category-title"><h4>Category: &nbsp;&nbsp;</h4>

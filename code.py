@@ -35,3 +35,4 @@ def session_hook():
 
 if __name__ == "__main__": 
     app.add_processor(web.loadhook(session_hook))  
+    app.run()

@@ -9,11 +9,12 @@ import time
 import commands
 import twitter  
 import tweepy 
-from config import settings  
+from config import settings   
+
 
 render = settings.render
 db = settings.db 
-config = settings.config  
+config = settings.config   
 
 #This function uses the model I have trained already to classify the text
 #the model will return best category of the input text
@@ -100,7 +101,7 @@ def get_user_tweets(session):
         for status in status_list:
             tweet_dict = {"tweet_time": get_local_time(status.created_at)}
             tweet_dict.update({"tweet_text": status.text})
-            tweet_dict.update({"tweet_id": status.id})
+            tweet_dict.update({"tweet_id": str(status.id)})
             user_tweets_list.append(tweet_dict)  
     except:
         print 'api.user_timeline ERROR......................' 
@@ -204,7 +205,7 @@ class SubmitTweet:
         print 'tweet textarea=', tweet 
         try:
             api = get_tweepAPI(web.ctx.session) 
-            api.update_status('wtf test submit aaaa')    
+            api.update_status(tweet)    
             time.sleep(2)
         except tweepy.TweepError, err_msg:
             #TODO here to handle the tweepy or api error

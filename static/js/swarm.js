@@ -87,6 +87,7 @@ jQuery('#ask-them').click(function() {
 			jQuery('.tweet_delete_div').hide().fadeIn(100); 
 			delete_tweet_handler(); 
             jQuery('#ask-them').button('reset');
+	        jQuery('#textarea').val('');
         }
 	});
     return false;
