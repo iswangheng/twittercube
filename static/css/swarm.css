@@ -3,6 +3,14 @@
 *
 */
 
+.nav_user_pic {
+	height: 30px;
+	width: 30px;
+    padding: 0px;
+	margin-top: 5px;
+}
+
+
 .swarm-container {
   width: 970px; 
   margin-left: auto;
@@ -218,6 +226,10 @@ strong {
 
 .user_tweet_div:hover{
 	background-color: #DDE;
+}
+
+#user_tweet_div_init {
+	display:none;
 }
 
 .user_img_div {

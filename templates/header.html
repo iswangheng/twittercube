@@ -1,3 +1,5 @@
+$def with(session)
+
 <!DOCTYPE html>
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -44,14 +46,14 @@
 	      <li id="nav_contact_id"><a href="contact.html">Contact</a></li>
 	    </ul>
         <ul class="nav pull-right">
-          <li><div class="nav_user_pic"><img src=""/></div></li>
+          <li><div class="nav_user_pic"><img src=$session.user_img /></div></li>
           <li class="divider-vertical"></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Benben<b class="caret"></b></a>
+          <li class="dropdown" id="signin_dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">$session.user_screen_name<b class="caret"></b></a>
             <ul class="dropdown-menu">
-                <li><a href="#">View Profile</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Log out</a></li>
+                <li id="nav_user_profile"><a href="#" target='_blank'>View Profile</a></li>
+                <li id="nav_user_divider" class="divider"></li>  
+                <li id="nav_user_signin"><a href="sign_out">Sign Out</a></li>
             </ul>
 		  </li>
         </ul>

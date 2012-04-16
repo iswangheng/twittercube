@@ -1,34 +1,34 @@
-$:render.header() 
+$def with(session)
 
+$:render.header(session)
 
   <div class="parent">   
 	<div class="sidebar">
   	    <div class="sidebar_user_info">
 		  <div class="userpic">
-			<a href="" target="_blank"><img src="" width="64px" height="64px"/></a>
+			<a href="" target="_blank"><img src=$session.user_img width="64px" height="64px"/></a>
 		  </div>
 		  <div class="name">
-			<a href="" target="_blank">name</a>
+			<a href="" target="_blank">$session.user_name</a>
 		  </div>
 		  <div class="screenname">
-			<a href="#" target="_blank">@screen_name</a>
+			<a href="#" target="_blank">@$session.user_screen_name</a>
 		  </div>
 		  <div class="userlocation">
-			<a href="#" target="_blank">location</a>
+			<a href="#" target="_blank">$session.user_location</a>
 		  </div>
 		  <hr>
 		  <table id="user_info_table" border="0" cellpadding="2"> 
 			<tr>
 			  <td>
 		        <label>
-				<a href="#" target="_blank"><strong id="statuses_count">111</strong></a>
+				<a href="#" target="_blank"><strong id="statuses_count">$session.user_statuses_count</strong></a>
 		        </label> 
 			  </td>
 			  <td>  
-				<a href="#" target="_blank"><strong id="following_count">222</strong></a> 
-			  </td>
+				<a href="#" target="_blank"><strong id="following_count">$session.user_following_count
 			  <td>
-				<a href="#" target="_blank"><strong id="followers_count">333</strong></a> 
+				<a href="#" target="_blank"><strong id="followers_count">$session.user_followers_count</strong></a> 
 			  </td>
 			</tr>
 			<tr>
@@ -150,7 +150,9 @@ $:render.header()
 
       <div class="user_tweets_parent_div">
 		  <span id="user_tweets"><h4>Tweets: </h4> </span>
-		  <div class="user_tweet_div" id="user_tweet_div_0">
+      </div>
+		  <!-- The reason I put it outside of the user_tweets_parenst_div is for the convinence of jQuery manipulation..... -->
+          <div class="user_tweet_div" id="user_tweet_div_init">
 			<div class="user_img_div">
 			  <a href="" target="_blank"><img src="" width="48px" height="48px" /></a>
 			</div>
@@ -165,7 +167,8 @@ $:render.header()
 			<div class="tweet_text_div"> </div>  
             <input type="hidden" class="tweet_id_input"></input> 
 		  </div>
-      </div>
+		  <!-- The reason I put it outside of the user_tweets_parenst_div is for the convinence of jQuery manipulation..... -->
+
 
 	</div>  <!-- end div for class="asking-div"  -->
   </div> <!-- end div for class="parent"  -->

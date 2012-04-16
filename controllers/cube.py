@@ -120,7 +120,7 @@ def get_tweepAPI(session):
 #convert the datetime of twitter api to the local time using utc_offset
 def get_local_time(datetime):
     #TODO utc_offset needs to be modified according to the visitors timezone!!
-    #     change the code below in the future 
+    #     modify the code below in the future 
     utc_offset = config.utc_offset 
     datetime = str(datetime)
     #TODO remained to be done......
@@ -245,7 +245,7 @@ def store_user_into_session(api):
     except:
         user_img = "http://a0.twimg.com/profile_images/459277408/logo1_normal.jpg"
         user_name = "笨笨"
-        user_screen_name = 'cnjswangheng'
+        user_screen_name = 'error_heng'
         user_location = 'Hong Kong'
         user_statuses_count = 1713
         user_following_count = 421
@@ -263,7 +263,7 @@ def store_user_into_session(api):
 #to render the index page
 class Index:
     def GET(self):
-        return render.index()
+        return render.index(web.ctx.session)
 
     def POST(self): 
         print 'post index'
@@ -277,7 +277,7 @@ class ShowExperts:
     def POST(self): 
         textarea = web.input().signal  
         print 'textarea=', textarea 
-        test_file_name = web.web.ctx.session.session_id 
+        test_file_name = web.ctx.session.session_id 
         category = get_category(textarea, test_file_name) 
         print 'category--------> ', category
         if category == "art&design":
@@ -312,7 +312,7 @@ class SubmitTweet:
             time.sleep(2)
         except tweepy.TweepError, err_msg:
             #TODO here to handle the tweepy or api error
-            print err_msg 
+            print err_msg   
         web.header('Content-Type', 'application/json')
         data_string = get_tweets_list(web.ctx.session)
         return data_string      
@@ -340,29 +340,24 @@ class DeleteTweet:
 class Asking:
     def GET(self):
         try:
-            print "web.ctx.session.access_token_key: %s" % web.ctx.session.access_token_key
-            print "web.ctx.session.access_token_secret: %s" % web.ctx.session.access_token_secret     
-            return render.asking()
-        except AttributeError:
-            print "ERROR...access token key and secret NOT found !!"
+            print "web.ctx.session.user_screen_name %s" % web.ctx.session.user_screen_name 
+            if web.ctx.session.user_screen_name == '':
+                web.seeother('sign_in_with_twitter')
+            return render.asking(web.ctx.session)
+        except AttributeError, msg:
+            print "ERROR.. : %s" % msg
             web.seeother('sign_in_with_twitter')
 
 
 #when the user has come to the asking.html page
 # which means that he has logged in
-# so this class is to process the ajax of showing user info and 5 latest quesionts
+# so this class is to process the ajax of showing user info and 6 latest quesionts
 class ShowUserInfo:
     def POST(self):    
         session = web.ctx.session     
         print "will show the user info, session.user_screen_name is : %s" % session.user_screen_name
-        data = {'user_img': session.user_img} 
-        data.update({'user_name': session.user_name}) 
-        data.update({'user_screen_name': session.user_screen_name}) 
-        data.update({'user_location': session.user_location}) 
-        data.update({'user_statuses_count': session.user_statuses_count}) 
-        data.update({'user_following_count': session.user_following_count}) 
-        data.update({'user_followers_count': session.user_followers_count}) 
-        print "will show the user 5 latest questions"  
+        data = {'user_screen_name': session.user_screen_name}
+        print "will show the user 6 latest questions"  
         question_list = get_questions()
         data.update({'question_list': question_list})     
         data_string = json.dumps(data)
@@ -421,27 +416,34 @@ class Callback:
                 print 'Error.. Failed to get access token ---->%s' % err  
             web.ctx.session.access_token_key = auth.access_token.key
             web.ctx.session.access_token_secret = auth.access_token.secret  
-            print 'will now go to the asking.html' 
+            print 'will now go to the index.html' 
             api = get_tweepAPI(web.ctx.session) 
             store_user_into_session(api)
-            web.seeother('asking.html')   
+            web.seeother('index.html')   
         except:
             print 'Error: ', sys.exc_info()[0]
             web.seeother('sign_in_with_twitter') 
 
 
+class SignOut:
+    def GET(self):
+        print "WILL SIGN OUT~~~~~~~~~~~~~~~~~~~~~~~~"
+        web.ctx.session.kill()
+        web.seeother('index.html')
+
+
 class Others:
     def GET(self,other): 
         if other == 'about.html':
-            return render.about()
+            return render.about(web.ctx.session)
         elif other == 'contact.html':
-            return render.contact()    
+            return render.contact(web.ctx.session)    
         elif other == 'event.html':
-            return render.event()
+            return render.event(web.ctx.session)
         elif other == 'explore.html':
-            return render.explore()
+            return render.explore(web.ctx.session)
         elif other == 'index.html':
-            return render.index()
+            return render.index(web.ctx.session)
 
     def POST(self):
         print 'post self'

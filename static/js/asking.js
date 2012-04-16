@@ -26,22 +26,14 @@ function show_user_info(){
 		type: 'POST', 
 		data: {signal: post_data},
         dataType: 'json',
-		success: function(data){     
-            var user_tweets_list = data.user_tweets_list;
-            var user_link = "https://twitter.com/#!/" + data.user_screen_name; 
-            jQuery('.userpic img').attr("src", data.user_img);
- 			jQuery('.name>a').text(data.user_name);  
- 			jQuery('.screenname>a').text('@' + data.user_screen_name);  
- 			jQuery('.userlocation>a').text(data.user_location); 
- 			jQuery('#statuses_count').text(data.user_statuses_count);  
- 			jQuery('#following_count').text(data.user_following_count);  
- 			jQuery('#followers_count').text(data.user_followers_count); 
+		success: function(data){      
+            var user_link = "https://twitter.com/#!/" + data.user_screen_name;    
 			jQuery('.userpic a').attr("href", user_link);
 			jQuery('.name a').attr("href", user_link);
 			jQuery('.screenname a').attr("href", user_link); 
 			jQuery('.userlocation a').attr("href", user_link);
-			jQuery('#user_info_table  a').attr("href", user_link);
-			
+			jQuery('#user_info_table  a').attr("href", user_link); 
+
 			//below is to show the 6 latest quesions
             var count = 1;
             var question_list = data.question_list;
@@ -67,38 +59,47 @@ function show_user_tweets(){
 		data: {signal: post_data},
         dataType: 'json',
 		success: function(data){     
-            var count = 0
-            var user_link = "https://twitter.com/#!/" + data.user_screen_name;
-            var user_tweets_list = data.user_tweets_list;
-            var user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
-            jQuery('.user_tweet_div').remove();  
-            for(count = 0; count < data.user_tweets_list.length; count++){
-            	var id_num = "user_tweet_div_" + count; 
-                var delete_div_id = "tweet_delete_div_" + count;               
-                user_tweets_clone.attr('id', id_num);
-                user_tweets_clone.insertAfter(jQuery('#user_tweets'));
-				user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
-                var id_time_selector = '#' + id_num + '>.tweet_time_div';
-                var id_text_selector = '#' + id_num + '>.tweet_text_div'; 
-                var id_tweet_id_selector = '#' + id_num + '>.tweet_id_input'; 
-                var id_tweet_delete_selector = '#' + id_num + '>.tweet_delete_div'; 
-            	jQuery(id_time_selector).text(user_tweets_list[count].tweet_time);
-            	jQuery(id_text_selector).html(user_tweets_list[count].tweet_text); 
-           		jQuery(id_tweet_id_selector).val(user_tweets_list[count].tweet_id);  
-           		jQuery(id_tweet_delete_selector).attr('id', delete_div_id);  
-            }     
-            jQuery('.user_img_div img').attr('src', jQuery('.userpic img').attr('src'));
-            jQuery('.user_img_div>a').attr('href', user_link);
-            jQuery('.user_name_div>a').attr('href',user_link);
-            jQuery('.user_name_div>a').text(jQuery('.name>a').text());
-            jQuery('.user_screen_name_div>a').text('@' + data.user_screen_name);
-            jQuery('.user_tweets_parent_div').hide().fadeIn(1000); 	 
-            jQuery('.tweet_delete_div').hide().fadeIn(1000); 	 
+			show_user_tweets_html(data); 
 			delete_tweet_handler();   
        }
 	});
     return false;
 }  
+
+
+//asking.html:	show user tweets (after getting tweets useing ajax)
+function show_user_tweets_html(data){
+    var count = 0
+    var user_link = "https://twitter.com/#!/" + data.user_screen_name;
+    var user_tweets_list = data.user_tweets_list;
+    var user_tweets_clone = jQuery('#user_tweet_div_init').clone(); 
+    jQuery('.user_tweets_parent_div .user_tweet_div').remove();      
+    for(count = 0; count < data.user_tweets_list.length; count++){
+    	var id_num = "user_tweet_div_" + count; 
+        var delete_div_id = "tweet_delete_div_" + count;               
+        user_tweets_clone.attr('id', id_num);
+        user_tweets_clone.insertAfter(jQuery('#user_tweets'));
+		user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
+        var id_time_selector = '#' + id_num + '>.tweet_time_div';
+        var id_text_selector = '#' + id_num + '>.tweet_text_div'; 
+        var id_tweet_id_selector = '#' + id_num + '>.tweet_id_input'; 
+        var id_tweet_delete_selector = '#' + id_num + '>.tweet_delete_div'; 
+    	jQuery(id_time_selector).text(user_tweets_list[count].tweet_time);
+    	jQuery(id_text_selector).html(user_tweets_list[count].tweet_text); 
+   		jQuery(id_tweet_id_selector).val(user_tweets_list[count].tweet_id);  
+   		jQuery(id_tweet_delete_selector).attr('id', delete_div_id);  
+    }      
+    jQuery('.user_img_div img').attr('src', jQuery('.userpic img').attr('src'));
+    jQuery('.user_img_div>a').attr('href', user_link);
+    jQuery('.user_name_div>a').attr('href', user_link);
+    jQuery('.user_name_div>a').text(jQuery('.name>a').text());
+    jQuery('.user_screen_name_div>a').text('@' + data.user_screen_name);
+    jQuery('.user_screen_name_div>a').attr('href', user_link);
+	jQuery('.experts-table').hide();  
+    jQuery('.user_tweets_parent_div').hide().fadeIn(1000); 	 
+    jQuery('.tweet_delete_div').hide().fadeIn(1000); 
+}
+
 
 //asking.html:	monitor the textarea for word counter
 function monitor_textarea(){
@@ -155,7 +156,7 @@ function delete_tweet_ajax(tweet_id, dom) {
 		type: 'POST',
 		data: {signal: post_data}, 
         success: function(data) {
-			jQuery(dom).parent().fadeOut(600);
+			jQuery(dom).parent().hide(600);
  	    }
 	});
     return false;
@@ -179,7 +180,7 @@ jQuery('#show-experts').click(function() {
                 jQuery('.experts-table>table>tbody tr').remove()
 				var expertsList = data.experts_detailed_list;
                 var experts = ''; 
-                //TODO ahhhhhh.... codes below are so dirty, remembe to rewrite them when im avaible
+                //TODO ahhhhhh.... codes below are so dirty, remember to rewrite them when i amm available
 				for(i = 0; i < expertsList.length; i++){
 					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
                     var expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 
@@ -220,38 +221,10 @@ jQuery('#ask-them').click(function() {
 		data: {signal: post_data},
         dataType: 'json',
         success: function(data) { 
-            var user_tweets_list = data.user_tweets_list;
-            var user_link = "https://twitter.com/#!/" + data.user_screen_name;
-            var user_tweets_clone = jQuery('#user_tweet_div_0').clone(); 
-            jQuery('.user_tweet_div').remove(); 
-            var count = 0
-            for(count = 0; count < 5; count++){
-            	var id_num = "user_tweet_div_" + count; 
-                var delete_div_id = "tweet_delete_div_" + count;
-                user_tweets_clone.attr('id', id_num);
-                user_tweets_clone.insertAfter(jQuery('#user_tweets'));
-				user_tweets_clone = jQuery('#user_tweet_div_0').clone();
-                var id_time_selector = '#' + id_num + '>.tweet_time_div';
-                var id_text_selector = '#' + id_num + '>.tweet_text_div'; 
-                var id_tweet_id_selector = '#' + id_num + '>.tweet_id_input'; 
-                var id_tweet_delete_selector = '#' + id_num + '>.tweet_delete_div'; 
-            	jQuery(id_time_selector).text(user_tweets_list[count].tweet_time);
-            	jQuery(id_text_selector).text(user_tweets_list[count].tweet_text);
-           		jQuery(id_tweet_id_selector).val(user_tweets_list[count].tweet_id);  
-           		jQuery(id_tweet_delete_selector).attr('id', delete_div_id);  
-            }
-            jQuery('.user_img_div img').attr('src', data.user_img);
-            jQuery('.user_img_div>a').attr('href', user_link);
-            jQuery('.user_name_div>a').attr('href',user_link);
-            jQuery('.user_name_div>a').text(data.user_name);
-            jQuery('.user_screen_name_div>a').text('@' + data.user_screen_name); 
-            jQuery('.tweet_id_input').text(data.tweet_id); 
-		    jQuery('.experts-table').hide();    
-            jQuery('.user_tweets_parent_div').hide().fadeIn(1000); 		
-			jQuery('.tweet_delete_div').hide().fadeIn(100); 
-			delete_tweet_handler(); 
+			show_user_tweets_html(data);
             jQuery('#ask-them').button('reset');
-	        jQuery('#textarea').val('');
+	        jQuery('#textarea').val(''); 
+			delete_tweet_handler();   
         }
 	});
     return false;
