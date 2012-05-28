@@ -7,7 +7,7 @@ import os
 import sys
 import time
 import commands
-import twitter  
+#import twitter  
 import tweepy 
 from config import settings   
 

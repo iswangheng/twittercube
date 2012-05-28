@@ -1,0 +1,7 @@
+0.  python
+1.  sudo apt-get install python-mysqldb
+3.  web.py
+4.  mysql
+5.  git clone https://github.com/tweepy/tweepy.git
+    remember to install tweepy
+
