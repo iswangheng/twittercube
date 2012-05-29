@@ -145,7 +145,7 @@ class Lid:
 					result[i] += 1
 		value = float(1.0)
 		element = 0
-		for x in range(len(result)):
+		for x in range(len(result)): 
 			result[x] = float(result[x])/float(self.num)
 			if value > result[x]:
 				value = float(result[x])

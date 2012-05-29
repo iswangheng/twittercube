@@ -211,4 +211,4 @@ def get_category(text):
 ##update userinfo set isClassified = 0 where isClassified =1
 
 if __name__ == '__main__':    
-    classify_user();
+    classify_user()
