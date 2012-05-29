@@ -33,6 +33,7 @@ def get_category(text, test_file_name):
     index = category.index(':') + 1
     category = category[index:]
     category = category.strip()
+    category = category.encode("utf-8")
     return category
 
 

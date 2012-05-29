@@ -6,3 +6,32 @@ CREATE  TABLE `twitter_cube`.`sessions` (
   UNIQUE INDEX `session_id_UNIQUE` (`session_id` ASC) ,
   PRIMARY KEY (`session_id`) )
 DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE `experts` (
+  `idexperts` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) DEFAULT NULL,
+  `user_img` varchar(150) DEFAULT NULL,
+  `user_description` varchar(500) DEFAULT NULL,
+  `artdesign` varchar(10) DEFAULT NULL,
+  `autos` varchar(10) DEFAULT NULL,
+  `business` varchar(10) DEFAULT NULL,
+  `education` varchar(10) DEFAULT NULL,
+  `entertainment` varchar(10) DEFAULT NULL,
+  `fashion` varchar(10) DEFAULT NULL,
+  `food` varchar(10) DEFAULT NULL,
+  `health` varchar(10) DEFAULT NULL,
+  `music` varchar(10) DEFAULT NULL,
+  `politics` varchar(10) DEFAULT NULL,
+  `religion` varchar(10) DEFAULT NULL,
+  `scitech` varchar(10) DEFAULT NULL,
+  `sports` varchar(10) DEFAULT NULL,
+  `travel` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`idexperts`)
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8
+
+CREATE TABLE `questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) DEFAULT NULL,
+  `question` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8
