@@ -102,7 +102,7 @@ input.tweet-counter {
 }
 
 .sidebar_user_info:hover {
-	background-color: #DDE;; 
+	background-color: #DDE;
 }
 
 .name a{
@@ -307,4 +307,102 @@ strong {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
+
+
+
+/* event.html */
+.event-keyword-div {
+	background-color: transparent;   
+	width: 100%;
+    height: 220px;   
+	padding: 2px; 
+	margin: 0px; 
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+ 
+/* event.html */
+.keyword-freq-div {
+	background-color: #DEF;   
+	width: 48%;
+    height: 210px;   
+	padding: 2px; 
+	margin: 0px; 
+	margin-left: 10px; 
+	float: left;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+/* event.html */
+.related-news-div {
+	background-color: #DEF;   
+	width: 48%;
+    height: 210px;   
+	padding: 2px; 
+	margin: 0px;  
+	margin-left: 7px; 
+	float: left;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+/* event.html */
+.event-graph-div {
+	background-color: transparent;   
+	width: 98%;
+    height: 340px;  
+	padding: 10px; 
+	margin: 0px;
+	margin-top: 4px; 
+	margin-bottom: 4px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+/* event.html */
+.keyword-control-div {
+	background-color: #DEF;   
+	width: 30%;
+    height: 100%;   
+	padding: 0px; 
+	margin: 0px; 
+	margin-left: 3px; 
+	float: left;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+/* event.html */
+.keyword-graph-div {
+	background-color: #DEF;   
+	width: 69%;
+    height: 100%;   
+	padding: 0px; 
+	margin: 0px; 
+	margin-left: 3px; 
+	float: left;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
 

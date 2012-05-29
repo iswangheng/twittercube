@@ -2,6 +2,138 @@ $def with(session)
 
 $:render.header(session)
 
+  <div class="parent"> 
+    <!-- event-keyword-div start  -->  
+	<div class="event-keyword-div">
+    	<!-- keyword-freq-div start  -->  
+        <div class="keyword-freq-div">
+ 		 <table class="table table-bordered" id="keyword_table" width="100%">  
+		    <thead> 
+			  <tr>
+			  	<td width="50%"><h4>Keywords</h4></td>
+			  	<td><h4>Frequency</h4></td>
+ 			  </tr>
+		    </thead>
+		    <tbody>    
+			  <tr>
+			  	<td id='keyword_1'>word_one</td>
+			  	<td id='frequency_1'>frequency_one</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='keyword_2'>word_two</td>
+			  	<td id='frequency_2'>frequency_two</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='keyword_3'>word_three</td>
+			  	<td id='frequency_3'>frequency_three</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='keyword_4'>word_four</td>
+			  	<td id='frequency_4'>frequency_four</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='keyword_5'>word_five</td>
+			  	<td id='frequency_5'>frequency_five</td> 
+		    </tbody>
+		  </table>
+        </div>  <!-- end div for class="keyword-freq-div"  -->
+		
+    	<!-- related-news-div start  -->  
+		<div class="related-news-div">
+ 		 <table class="table table-bordered" id="news_table" width="100%">  
+		    <thead> 
+			  <tr> 
+			  	<td><h4>Related News Title</h4></td>
+ 			  </tr>
+		    </thead>
+		    <tbody>    
+			  <tr>
+			  	<td id='title_1'>title_one</td> 
+ 			  </tr>
+			  <tr>
+			  	<td id='title_2'>title_two</td> 
+ 			  </tr>
+			  <tr>
+			  	<td id='title_3'>title_three</td> 
+ 			  </tr>
+			  <tr>
+			  	<td id='title_4'>title_four</td> 
+ 			  </tr>
+			  <tr>
+			  	<td id='title_5'>title_five</td> 
+		    </tbody>
+		  </table>
+		</div><!-- end div for class="related-news-div"  -->
+	</div> <!-- end div for class="event-keyword-div"  -->
+
+	
+    <!-- event-graph-div start  -->
+    <div class="event-graph-div">   
+		<!-- keyword-control-div start  -->  
+		<div class="keyword-control-div">
+	      <form class="form-horizonal" method="POST">
+		    <fieldset>
+	 		 <table class="table table-bordered" id="keyword_contrl_table" width="100%">  
+				<thead> 
+				  <tr> 
+				  	<td colspan="2"><h4>Select Distance of Keyword Graph</h4></td>
+	 			  </tr>
+				</thead>
+				<tbody>    
+				  <tr>
+				  	<td colspan="2" id='distance'>
+						<label class="radio inline">
+							<input type="radio" name="distanceRadios" id="distance_7" value="7d" checked>
+							7 days
+						</label>&nbsp;&nbsp;
+						<label class="radio inline">
+							<input type="radio" name="distanceRadios" id="distance_14" value="14d">
+							14 days
+						</label>&nbsp;&nbsp;
+						<label class="radio inline">
+							<input type="radio" name="distanceRadios" id="distance_30" value="30d">
+							30 days
+						</label>
+					</td> 
+	 			  </tr>
+				  <tr>
+				  	<td colspan="2">
+						<button id="graph" class="btn btn-primary" type="submit" data-content="Click here to show the graph of your selected keyword!" data-original-title="Show Keyword Graph!" onmouseover="jQuery(this).popover('show')" data-loading-text="Calculating.. ">
+						Show Keyword Graph!
+						</button> 
+					</td> 
+	 			  </tr>
+				  <tr>
+				  	<td width="30%"><h4>Current Keyword</h4></td> 
+				  	<td id='current_keyword'>id='current_keyword'</td> 
+	 			  </tr>
+				  <tr>
+				  	<td width="30%" rowspan="4" valign="middle"><h4>Similar Keywords</h4></td> 
+				  	<td id='similar_keyword_1'>similar_keyword_1</td> 
+	 			  </tr>
+				  <tr> 
+				  	<td id='similar_keyword_2'>similar_keyword_2</td> 
+		          </tr>
+				  <tr> 
+				  	<td id='similar_keyword_3'>similar_keyword_3</td> 
+		          </tr>
+				  <tr>
+				  	<td id='similar_keyword_4'>similar_keyword_4</td> 
+		          </tr>
+				</tbody>
+			  </table>
+			</fieldset>
+		  </form>  
+		</div><!-- end div for class="keyword-control-div"  -->
+
+	    <!-- keyword-graph-div start  -->  
+		<div class="keyword-graph-div"> 
+		</div><!-- end div for class="keyword-graph-div"  -->
+		
+	</div>  <!-- end div for class="event-graph-div"  -->
+
+  </div> <!-- end div for class="parent"  -->
+
   <script src="static/js/event.js"></script>
 $:render.foot()
 
