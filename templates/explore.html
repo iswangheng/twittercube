@@ -2,6 +2,143 @@ $def with(session)
 
 $:render.header(session)
 
+  <div class="parent">   
+	<div class="sidebar">
+  	    <div class="sidebar_user_info">
+		  <div class="userpic">
+			<a href="" target="_blank"><img src=$session.user_img width="64px" height="64px"/></a>
+		  </div>
+		  <div class="name">
+			<a href="" target="_blank">$session.user_name</a>
+		  </div>
+		  <div class="screenname">
+			<a href="#" target="_blank">@$session.user_screen_name</a>
+		  </div>
+		  <div class="userlocation">
+			<a href="#" target="_blank">$session.user_location</a>
+		  </div>
+		  <hr>
+		  <table id="user_info_table" border="0" cellpadding="2"> 
+			<tr>
+			  <td>
+		        <label>
+				<a href="#" target="_blank"><strong id="statuses_count">$session.user_statuses_count</strong></a>
+		        </label> 
+			  </td>
+			  <td>  
+				<a href="#" target="_blank"><strong id="following_count">$session.user_following_count
+			  <td>
+				<a href="#" target="_blank"><strong id="followers_count">$session.user_followers_count</strong></a> 
+			  </td>
+			</tr>
+			<tr>
+			  <td>
+				<a href="#" target="_blank">TWEETS</a> 
+			  </td>
+			  <td>
+				<a href="#" target="_blank">FOLLOWING</a> 			
+			  </td>
+			  <td>
+				<a href="#" target="_blank">FOLLOWERS</a> 			
+			  </td>
+			</tr>
+		  </table>
+		</div>  <!--  end for class=sidebar_user_info div --> 
+
+	</div>  <!--  end for class=sidebar div -->
+
+
+     <!-- sentiment-div start right -->
+     <div class="sentiment-div">
+      <div class="form_class">
+	  <form class="form-horizonal" method="POST">
+		<fieldset>
+		  <div class="control-group center">
+			<h3 class="control-label" id="textarea-label">Sentiment Analysis:</h3>
+			<div class="controls">   
+			  <textarea class="input-xlarge" id="textarea" rows="4">
+			  </textarea> 	
+			</div>
+		  </div>    <!--  end for class = 'control-group center' div -->
+
+		  <div class="tweet-button-sub-container">			
+			&nbsp; &nbsp; &nbsp;&nbsp;  
+			&nbsp; &nbsp; &nbsp;&nbsp; 
+
+			<button id="analyze" class="btn btn-primary" type="submit" data-content="Click here to submit your sentence and then you can wait for the result!" data-original-title="Analyze!" onmouseover="jQuery(this).popover('show')" data-loading-text="Analyzing.. " disabled="true">
+			Click Me to Analyze!
+			</button> 
+		  </div>   <!--  end for class = 'tweet-button-sub-container' div -->
+		</fieldset>
+	  </form>  
+      </div>  <!--  end for class = 'form_class' div -->
+	
+      <div class="help_div"> 
+        <span class="label label-important">How to Use?</span>
+        <dl class="dl-horizontal">
+		  <dt>What's this?</dt>
+          <dd> 
+            Aims to determine the attitude of a sentence.
+          </dd>
+ 		  <dt>Now What?</dt>
+          <dd>
+            Just type your sentence into the left textarea.
+          </dd>
+		  <dt>And Then?</dt>
+          <dd>
+            Click the blue button and wait to see whether it's positive or negative.
+          </dd>      
+        </dl>
+	  </div> <!--  end for class = 'help_div' div -->
+
+	  <div class="category_div">
+		<span id="category-title"><h4>Category: &nbsp;&nbsp;</h4>
+		</span> 
+		<text id="category" class="category"></text>
+	  </div>
+ 
+	   <div class="analyzing_sentences"> 
+	      <h4>People are analyzing: </h4>  
+			<br/>   
+		  <table class="table" id="sentence_table" width="100%">  
+		    <thead> 
+			  <tr>
+			  	<td width="25%">Pos OR Neg</td>
+			  	<td>Sentence</td>
+ 			  </tr>
+		    </thead>
+		    <tbody>    
+			  <tr>
+			  	<td id='posneg_1'>one</td>
+			  	<td id='sentence_1'>one</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='posneg_2'>two</td>
+			  	<td id='sentence_2'>two</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='posneg_3'>three</td>
+			  	<td id='sentence_3'>three</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='posneg_4'>four</td>
+			  	<td id='sentence_4'>four</td>
+ 			  </tr>
+			  <tr>
+			  	<td id='posneg_5'>five</td>
+			  	<td id='sentence_5'>five</td>
+ 			  </tr> 
+			  <tr>
+			  	<td id='posneg_6'>six</td>
+			  	<td id='sentence_6'>six</td>
+ 			  </tr> 
+		    </tbody>
+		  </table>
+	    </div> <!--  end for class=analyzing_sentences div -->
+
+	</div>  <!-- end div for class="sentiment-div"  -->
+  </div> <!-- end div for class="parent"  -->
+
   <script src="static/js/explore.js"></script>
  
 $:render.foot()

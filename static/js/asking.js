@@ -180,7 +180,7 @@ jQuery('#show-experts').click(function() {
                 jQuery('.experts-table>table>tbody tr').remove()
 				var expertsList = data.experts_detailed_list;
                 var experts = ''; 
-                //TODO ahhhhhh.... codes below are so dirty, remember to rewrite them when i amm available
+                //TODO ahhhhhh.... codes below are so dirty, remember to rewrite them when i am available
 				for(i = 0; i < expertsList.length; i++){
 					experts = experts + '@' + expertsList[i]['screen_name'] + ' ';
                     var expert_img_html = "<a href=https://twitter.com/#!/" + expertsList[i]['screen_name'] 

@@ -13,6 +13,8 @@ urls = (
      '/show_experts',   	  pre_fix + 'cube.ShowExperts',
      '/submit_tweet',   	  pre_fix + 'cube.SubmitTweet', 
      '/delete_tweet',         pre_fix + 'cube.DeleteTweet',
+     '/show_sentences',       pre_fix + 'sentiment.ShowSentences',
+     '/sentiment_analysis',   pre_fix + 'sentiment.SentimentAnalysis',
      '/sign_out',             pre_fix + 'cube.SignOut',
      '/(.*)',                 pre_fix + 'cube.Others',
 )

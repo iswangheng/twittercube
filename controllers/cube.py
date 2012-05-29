@@ -48,7 +48,7 @@ def convert_category(cat):
     cat_dict['food'] = 'Food'
     cat_dict['health'] = 'Health'
     cat_dict['music'] = 'Music'
-    cat_dict['politics'] = 'Politicts'
+    cat_dict['politics'] = 'Politics'
     cat_dict['religion'] = 'Religion'
     cat_dict['sci&tech'] = 'Science & Technology'
     cat_dict['sports'] = 'Sports'
@@ -103,7 +103,7 @@ def get_questions():
 def store_question(text, name):
     try:
         db.insert('questions', username=str(name), question=text)
-        print "!!!!#####insert db@@@############"
+        print "!!!!#####insert db@@@##questions##########"
     except:
         print "db insert error"
 
@@ -376,6 +376,7 @@ class ShowUserTweets:
         data_string = get_tweets_list(session)
         web.header('Content-Type', 'application/json')
         return data_string              
+
 
 #when use click the sign in with twitter button
 class SignIn:

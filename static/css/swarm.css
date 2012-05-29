@@ -155,7 +155,7 @@ strong {
 	margin-left: 85px;
 }
 
-.asking-div { 
+.asking-div , .sentiment-div { 
 	background-color: #f5f5f5;  	/*whiteSmoke*/  
 	width: 600px;  
     min-height: 580px;
@@ -291,4 +291,20 @@ strong {
 	/*background-color: #00F;  */
 }
 
+
+/* explore.html  */
+.analyzing_sentences {	
+   /*background-color: #DEF; */
+    background-color: #FFF;
+	width: 597px;
+    min-height: 150px;
+	padding: 0px; 
+	float:left;
+	margin-top:12px;
+	overflow: hidden;
+	position: relative;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
 
