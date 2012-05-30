@@ -2,7 +2,7 @@
 jQuery(function(){  
     change_active_nav();
     show_keywords_freqs();
-    get_keywords_array();
+    //get_keywords_array();
 });
 
 //event.html:	chang the nav-collapse active state
@@ -30,15 +30,23 @@ function show_keywords_freqs(){
 		data: {signal: date},
         dataType: 'json',
 		success: function(data){      
-			//below is to show the 5 hottest keywords and their freqs
+			//below is to show the 5 hottest keywords and their freqs AND ALSO the 5 keywords graph(which are 5 arrays)
             var count = 1; 
             var keywords_list = data.keywords_list;
+            var keywords_lines = data.keywords_lines;
+            var line1 = keywords_lines.line1;
+            var line2 = keywords_lines.line2;
+            var line3 = keywords_lines.line3;
+            var line4 = keywords_lines.line4;
+            var line5 = keywords_lines.line5; 
+            var max_yaxis = keywords_lines.max_yaxis;
             for(count = 1; count <= keywords_list.length; count++) {
                 var keyword_selector_id = "#keyword_" + count; 
 			    var freq_selector_id = "#frequency_" + count; 
 				jQuery(keyword_selector_id).text(keywords_list[count-1]['keyword']).hide().fadeIn(800);	
 				jQuery(freq_selector_id).text(keywords_list[count-1]['frequency']).hide().fadeIn(800);  
 			} 
+			display_all_keywords_graph(line1, line2, line3, line4, line5, max_yaxis);
 		}
 		});
     return false;
@@ -56,32 +64,11 @@ jQuery('.keyword').click(function(){
     jQuery('#current_keyword').text(current_keyword).hide().fadeIn(400);
 });
 
-
-//event.html:   get 5 keywords arrays and then invoke display_all_keywords_graph to display them!!
-function get_keywords_array(){
-  var line1=[['23-May-08', 578.55], ['20-Jun-08', 566.5], ['25-Jul-08', 480.88], ['22-Aug-08', 509.84], 
-      ['26-Sep-08', 454.13], ['24-Oct-08', 379.75], ['21-Nov-08', 303], ['26-Dec-08', 308.56], 
-      ['23-Jan-09', 299.14], ['20-Feb-09', 346.51], ['20-Mar-09', 325.99], ['24-Apr-09', 386.15]];
-  var line2=[['23-May-08', 518.55], ['20-Jun-08', 516.5], ['25-Jul-08', 280.88], ['22-Aug-08', 209.84], 
-      ['26-Sep-08', 464.13], ['24-Oct-08', 389.75], ['21-Nov-08', 103], ['26-Dec-08', 238.56], 
-      ['23-Jan-09', 199.14], ['20-Feb-09', 316.51], ['20-Mar-09', 355.99], ['24-Apr-09', 186.15]];
-  var line3=[['23-May-08', 418.55], ['20-Jun-08', 416.5], ['25-Jul-08', 280.88], ['22-Aug-08', 209.84], 
-      ['26-Sep-08', 464.13], ['24-Oct-08', 389.75], ['21-Nov-08', 103], ['26-Dec-08', 238.56], 
-      ['23-Jan-09', 199.14], ['20-Feb-09', 316.51], ['20-Mar-09', 355.99], ['24-Apr-09', 186.15]];
-  var line4=[['23-May-08', 318.55], ['20-Jun-08', 316.5], ['25-Jul-08', 280.88], ['22-Aug-08', 209.84], 
-      ['26-Sep-08', 464.13], ['24-Oct-08', 389.75], ['21-Nov-08', 103], ['26-Dec-08', 238.56], 
-      ['23-Jan-09', 199.14], ['20-Feb-09', 316.51], ['20-Mar-09', 355.99], ['24-Apr-09', 186.15]];
-  var line5=[['23-May-08', 218.55], ['20-Jun-08', 216.5], ['25-Jul-08', 280.88], ['22-Aug-08', 209.84], 
-      ['26-Sep-08', 464.13], ['24-Oct-08', 389.75], ['21-Nov-08', 103], ['26-Dec-08', 238.56], 
-      ['23-Jan-09', 199.14], ['20-Feb-09', 316.51], ['20-Mar-09', 355.99], ['24-Apr-09', 186.15]];
-  display_all_keywords_graph(line1, line2, line3, line4, line5);
-}
-
-
-//event.html:   #chartdiv display all 5 keywords graph
-//TODO
-function display_all_keywords_graph(line1, line2, line3, line4, line5){
-  var plot1 = $.jqplot('chartdiv', [line1,line2,line3,line4,line5], {
+ 
+//event.html:   #chartdiv display all 5 keywords graph 
+function display_all_keywords_graph(line1, line2, line3, line4, line5, max_yaxis){
+  jQuery('#chartdiv').html(''); 
+  var plot1 = $.jqplot('chartdiv', [line1,line2, line3, line4, line5], {
       title:'Keywords Frequency Graph', 
  	  series:[ 
           {   
@@ -108,9 +95,7 @@ function display_all_keywords_graph(line1, line2, line3, line4, line5){
           } 
         },
         yaxis:{
-          tickOptions:{
-            formatString:'$%.2f'
-            }
+          max: max_yaxis,
         }
       },
       highlighter: {
