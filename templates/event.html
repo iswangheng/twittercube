@@ -2,6 +2,14 @@ $def with(session)
 
 $:render.header(session)
 
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="static/js/excanvas.js"></script><![endif]--> 
+<script language="javascript" type="text/javascript" src="static/js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/jqplot.cursor.min.js"></script>
+<script type="text/javascript" src="static/js/plugins/jqplot.dateAxisRenderer.min.js"></script>
+<link rel="stylesheet" type="text/css" href="static/css/jquery.jqplot.css" />
+
+
   <div class="parent"> 
     <!-- event-keyword-div start  -->  
 	<div class="event-keyword-div">
@@ -148,7 +156,7 @@ $:render.header(session)
 		</div><!-- end div for class="keyword-control-div"  -->
 
 	    <!-- keyword-graph-div start  -->  
-		<div class="keyword-graph-div"> 
+		<div class="keyword-graph-div" id="chartdiv"> 
 		</div><!-- end div for class="keyword-graph-div"  -->
 		
 	</div>  <!-- end div for class="event-graph-div"  -->

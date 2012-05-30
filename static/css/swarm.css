@@ -394,7 +394,7 @@ strong {
 	background-color: #DEF;   
 	width: 69%;
     height: 98%;   
-	padding: 0px; 
+	padding: 2px; 
 	margin: 0px; 
 	margin-left: 3px; 
 	float: left;
@@ -415,5 +415,32 @@ strong {
 #current_keyword {
 	font-size: 16px;   
 } 
+
+/*  event.html */
+#keyword_1, #current_keyword {
+    color: #0101DF;
+}
+
+/*  event.html */
+#keyword_2, #similar_keyword_1 {
+    color: #FF8000;
+}
+
+/*  event.html */
+#keyword_3, #similar_keyword_2 {
+    color: #B404AE;
+}
+
+/*  event.html */
+#keyword_4, #similar_keyword_3 {
+    color: #3ADF00;
+}
+
+/*  event.html */
+#keyword_5, #similar_keyword_4 {
+    color: #000000;
+}
+
+
 
 
