@@ -115,7 +115,7 @@ input.tweet-counter {
     color: #000;
 }
 
-.screenname a, .userlocation a, .user_screen_name_div a {
+.screenname a, .userlocation a, .user_screen_name_div a{
 	font-size: 15px; 
 	color: #999;
 } 
@@ -314,7 +314,7 @@ strong {
 .event-keyword-div {
 	background-color: transparent;   
 	width: 100%;
-    height: 220px;   
+    height: 240px;   
 	padding: 2px; 
 	margin: 0px; 
 	overflow: hidden;
@@ -328,7 +328,7 @@ strong {
 .keyword-freq-div {
 	background-color: #DEF;   
 	width: 48%;
-    height: 210px;   
+    height: 230px;   
 	padding: 2px; 
 	margin: 0px; 
 	margin-left: 10px; 
@@ -344,7 +344,7 @@ strong {
 .related-news-div {
 	background-color: #DEF;   
 	width: 48%;
-    height: 210px;   
+    height: 230px;   
 	padding: 2px; 
 	margin: 0px;  
 	margin-left: 7px; 
@@ -361,9 +361,9 @@ strong {
 	background-color: transparent;   
 	width: 98%;
     height: 340px;  
-	padding: 10px; 
-	margin: 0px;
-	margin-top: 4px; 
+	padding: 0px; 
+	margin: 0px; ; 
+	margin-left: 10px; 
 	margin-bottom: 4px;
 	float: left;
 	overflow: hidden;
@@ -377,7 +377,7 @@ strong {
 .keyword-control-div {
 	background-color: #DEF;   
 	width: 30%;
-    height: 100%;   
+    height: 98%;   
 	padding: 0px; 
 	margin: 0px; 
 	margin-left: 3px; 
@@ -393,7 +393,7 @@ strong {
 .keyword-graph-div {
 	background-color: #DEF;   
 	width: 69%;
-    height: 100%;   
+    height: 98%;   
 	padding: 0px; 
 	margin: 0px; 
 	margin-left: 3px; 
@@ -404,5 +404,16 @@ strong {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
+
+
+/* event.html */
+.keyword{
+	font-size: 16px;   
+} 
+
+/* event.html */
+#current_keyword {
+	font-size: 16px;   
+} 
 
 

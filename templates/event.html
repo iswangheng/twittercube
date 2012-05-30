@@ -10,29 +10,50 @@ $:render.header(session)
  		 <table class="table table-bordered" id="keyword_table" width="100%">  
 		    <thead> 
 			  <tr>
-			  	<td width="50%"><h4>Keywords</h4></td>
-			  	<td><h4>Frequency</h4></td>
+			  	<td width="50%" class="inline">
+                  <h4>Keywords &nbsp;&nbsp;
+                  <select class="span2 inline" id="keyword_date">
+                    <option>2009-4-15</option>
+                    <option>2009-4-16</option>
+                    <option>2009-4-17</option>
+                    <option>2009-4-18</option>
+                    <option>2009-4-19</option>
+                    <option>2009-4-20</option>
+                    <option>2009-4-21</option>
+                    <option>2009-4-22</option>
+                    <option>2009-4-23</option>
+                    <option>2009-4-24</option>
+                    <option>2009-4-25</option>
+                    <option>2009-4-26</option>
+                    <option>2009-4-27</option>
+                    <option>2009-4-28</option>
+                    <option>2009-4-29</option>
+                    <option>2009-4-30</option>
+                  </select>
+                  </h4> 
+                </td>
+			  	<td class="inline" valign="center"><h4>Frequency</h4></td>
  			  </tr>
 		    </thead>
 		    <tbody>    
 			  <tr>
-			  	<td id='keyword_1'>word_one</td>
+			  	<td><a href="#" class="keyword" id='keyword_1'>word_one</a></td>
 			  	<td id='frequency_1'>frequency_one</td>
  			  </tr>
 			  <tr>
-			  	<td id='keyword_2'>word_two</td>
+			  	<td><a href="#" class="keyword" id='keyword_2'>word_two</a></td>
 			  	<td id='frequency_2'>frequency_two</td>
  			  </tr>
 			  <tr>
-			  	<td id='keyword_3'>word_three</td>
+			  	<td><a href="#" class="keyword" id='keyword_3'>word_three</a></td>
 			  	<td id='frequency_3'>frequency_three</td>
  			  </tr>
 			  <tr>
-			  	<td id='keyword_4'>word_four</td>
+			  	<td><a href="#" class="keyword" id='keyword_4'>word_four</a></td>
 			  	<td id='frequency_4'>frequency_four</td>
  			  </tr>
 			  <tr>
-			  	<td id='keyword_5'>word_five</td>
+			  	<td><a href="#" class="keyword" id='keyword_5'>word_five</a></td>
 			  	<td id='frequency_5'>frequency_five</td> 
 		    </tbody>
 		  </table>
@@ -105,7 +126,7 @@ $:render.header(session)
 	 			  </tr>
 				  <tr>
 				  	<td width="30%"><h4>Current Keyword</h4></td> 
-				  	<td id='current_keyword'>id='current_keyword'</td> 
+				  	<td id='current_keyword'>All Keywords</td> 
 	 			  </tr>
 				  <tr>
 				  	<td width="30%" rowspan="4" valign="middle"><h4>Similar Keywords</h4></td> 

@@ -101,6 +101,7 @@ def get_questions():
 
 #store the question into the database named questions
 def store_question(text, name):
+    text = remove_at(text)
     try:
         db.insert('questions', username=str(name), question=text)
         print "!!!!#####insert db@@@##questions##########"

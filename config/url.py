@@ -15,6 +15,7 @@ urls = (
      '/delete_tweet',         pre_fix + 'cube.DeleteTweet',
      '/show_sentences',       pre_fix + 'sentiment.ShowSentences',
      '/sentiment_analysis',   pre_fix + 'sentiment.SentimentAnalysis',
+     '/show_keywords_freqs',  pre_fix + 'event.ShowKeywordsFreqs',
      '/sign_out',             pre_fix + 'cube.SignOut',
      '/(.*)',                 pre_fix + 'cube.Others',
 )
