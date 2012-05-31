@@ -30,14 +30,16 @@ def get_keywords(date_str):
   
 
 #will get the 5 keywords array from the file written by SimilarTrend.jar
-def get_keywords_lines(file_name, date_string):
+def get_keywords_lines(file_name, date_string, distance_str):
     print "will get keywords lines"
-    cmd = 'java -jar SimilarTrend.jar %s %s' % (file_name, date_string)
+    cmd = 'java -jar SimilarTrend.jar %s %s %s' % (file_name, date_string, distance_str)
     output = commands.getoutput(cmd)    
     openfile = open(file_name,"r")
     count = 0 
     keywords_lines = {}
-    max_yaxis = 0
+    min_xaxis = '2009-4-1'
+    max_xaxis = '2009-4-30'
+    max_yaxis = 0 
     keywords_str = ""   #stores the 5 keywords, e.g. "one two three four five"
     while True:
         if count == 5:
@@ -46,7 +48,8 @@ def get_keywords_lines(file_name, date_string):
         content = content[0:-1]
         #print content
         index = content.index(':') + 1 
-        keywords_str = keywords_str + content[0:index-1] + " "
+        head_keyword = content[0:index-1] 
+        keywords_str = keywords_str + head_keyword + " "
         content = content[index:]
         content = content.strip()
         freq_list = content.split(" ")
@@ -60,7 +63,8 @@ def get_keywords_lines(file_name, date_string):
             single_line.append(single_line_element)
             if freq > max_yaxis:
                 max_yaxis = freq
-            distance += 1
+            distance += 1           
+        min_xaxis = date_minus_day(date_string, distance)
         single_line.reverse()     
         count += 1
         print "single_line_list: ", single_line  
@@ -69,8 +73,11 @@ def get_keywords_lines(file_name, date_string):
         else:
             key_str = "line%s" % str(count)
             keywords_lines.update({key_str: single_line})
+    max_xaxis = date_plus_day(date_string, 1)
     max_yaxis = int(float(max_yaxis) * 1.1)
-    keywords_lines.update({"max_yaxis": max_yaxis})
+    keywords_lines.update({"min_xaxis": min_xaxis})
+    keywords_lines.update({"max_xaxis": max_xaxis})
+    keywords_lines.update({"max_yaxis": max_yaxis}) 
     keywords_lines.update({"keywords_str": keywords_str})
     openfile.close()
     #now will delete this temp file
@@ -85,6 +92,14 @@ def date_minus_day(date_string, days):
     #print "date: ", date_keyword
     date_keyword -= timedelta(days)
     print "date after sub: ", datetime.strftime(date_keyword, '%Y-%m-%d')
+    return datetime.strftime(date_keyword, '%Y-%m-%d')
+
+#will return the date where date = date + days
+def date_plus_day(date_string, days):
+    date_keyword = datetime.strptime(date_string, '%Y-%m-%d')
+    #print "date: ", date_keyword
+    date_keyword += timedelta(days)
+    print "date after plus: ", datetime.strftime(date_keyword, '%Y-%m-%d')
     return datetime.strftime(date_keyword, '%Y-%m-%d')
 
 
@@ -113,22 +128,98 @@ def get_news_titles(file_name, date_str):
 
 
 
+#will get the 5 keywords array from the file written by SimilarTrend2.jar
+def get_similar_keywords_lines(file_name, date_string, distance_str, keyword):
+    print "will get keywords lines"
+    cmd = 'java -jar SimilarTrend2.jar %s %s %s %s' % (file_name, date_string, distance_str, keyword)
+    output = commands.getoutput(cmd)    
+    openfile = open(file_name,"r")
+    count = 0 
+    keywords_lines = {}
+    min_xaxis = '2009-4-1'
+    max_xaxis = '2009-4-30'
+    max_yaxis = 0
+    similar_keywords_list = []  #stores the 5 keywords, e.g. ['one', 'two', 'three', 'four', 'five']
+    keywords_str = ""   #stores the 5 keywords, e.g. "one two three four five"
+    while True:
+        if count == 5:
+            break
+        content = openfile.readline() 
+        content = content[0:-1]
+        #print content
+        index = content.index(':') + 1 
+        head_keyword = content[0:index-1]
+        similar_keywords_list.append(head_keyword)
+        keywords_str = keywords_str + head_keyword + " "
+        content = content[index:]
+        content = content.strip()
+        freq_list = content.split(" ")
+        single_line_element = []
+        single_line = []
+        distance = 0
+        for freq in freq_list:
+            single_line_element=[]
+            single_line_element.append(date_minus_day(date_string, distance))
+            single_line_element.append(freq)
+            single_line.append(single_line_element)
+            if freq > max_yaxis:
+                max_yaxis = freq
+            distance += 1           
+        min_xaxis = date_minus_day(date_string, distance)
+        single_line.reverse()     
+        count += 1
+        print "single_line_list: ", single_line  
+        if count == 1:
+            keywords_lines = {"line1": single_line}
+        else:
+            key_str = "line%s" % str(count)
+            keywords_lines.update({key_str: single_line})
+    max_xaxis = date_plus_day(date_string, 1)
+    max_yaxis = int(float(max_yaxis) * 1.1)
+    keywords_lines.update({"min_xaxis": min_xaxis})
+    keywords_lines.update({"max_xaxis": max_xaxis})
+    keywords_lines.update({"max_yaxis": max_yaxis})
+    keywords_lines.update({"similar_keywords_list": similar_keywords_list})
+    keywords_lines.update({"keywords_str": keywords_str})
+    openfile.close()
+    #now will delete this temp file
+    cmd = 'rm %s' % file_name
+    commands_result = commands.getoutput(cmd)
+    return keywords_lines
+
+
 #when user come to the event.html, will show
 # the 5 hottest keywords and their frequencies of that specific dat
 #    AND will also show the related news title ragarding to the 5 hottest keywords  
 #    AND also return the 5 keywords graph data..(which are 5 arrays)
 class ShowKeywordsFreqs:
     def POST(self):    
-        date_str = web.input().signal
+        date_str = web.input().date_str
+        distance_str = web.input().distance_str 
         file_name = web.ctx.session.session_id 
         print "will show the 5 hottest keywords and frequencies, keywords_lines and 5 news titles"  
         keywords_list = get_keywords(date_str)
-        keywords_lines = get_keywords_lines(file_name, date_str)
+        keywords_lines = get_keywords_lines(file_name, date_str, distance_str)
         file_name = file_name + "_news_titles"
         news_titles = get_news_titles(file_name, date_str)
         data = ({'keywords_list': keywords_list}) 
         data.update({'keywords_lines': keywords_lines})
         data.update({'news_titles': news_titles})
+        data_string = json.dumps(data)
+        web.header('Content-Type', 'application/json')
+        return data_string    
+
+#when user select one particular keyword, will show
+#     4 similar keywords and all 5 words graph
+class ShowGraph:
+    def POST(self):
+        date_str = web.input().date_str
+        distance_str = web.input().distance_str 
+        keyword = web.input().current_keyword 
+        file_name = web.ctx.session.session_id + "similar_keywords"
+        print "will show the 4 simliar keywords and all 5 words graph"  
+        keywords_lines = get_similar_keywords_lines(file_name, date_str, distance_str, keyword)
+        data = ({'keywords_lines': keywords_lines}) 
         data_string = json.dumps(data)
         web.header('Content-Type', 'application/json')
         return data_string    

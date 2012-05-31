@@ -16,6 +16,7 @@ urls = (
      '/show_sentences',       pre_fix + 'sentiment.ShowSentences',
      '/sentiment_analysis',   pre_fix + 'sentiment.SentimentAnalysis',
      '/show_keywords_freqs',  pre_fix + 'event.ShowKeywordsFreqs',
+     '/show_graph',           pre_fix + 'event.ShowGraph',
      '/sign_out',             pre_fix + 'cube.SignOut',
      '/(.*)',                 pre_fix + 'cube.Others',
 )

@@ -99,9 +99,7 @@ $:render.header(session)
     <!-- event-graph-div start  -->
     <div class="event-graph-div">   
 		<!-- keyword-control-div start  -->  
-		<div class="keyword-control-div">
-	      <form class="form-horizonal" method="POST">
-		    <fieldset>
+		<div class="keyword-control-div"> 
 	 		 <table class="table table-bordered" id="keyword_contrl_table" width="100%">  
 				<thead> 
 				  <tr> 
@@ -112,22 +110,22 @@ $:render.header(session)
 				  <tr>
 				  	<td colspan="2" id='distance'>
 						<label class="radio inline">
-							<input type="radio" name="distanceRadios" id="distance_7" value="7d" checked>
+							<input type="radio" name="distanceRadios" id="distance_7" value="7" checked>
 							7 days
 						</label>&nbsp;&nbsp;
 						<label class="radio inline">
-							<input type="radio" name="distanceRadios" id="distance_14" value="14d">
+							<input type="radio" name="distanceRadios" id="distance_14" value="14">
 							14 days
 						</label>&nbsp;&nbsp;
 						<label class="radio inline">
-							<input type="radio" name="distanceRadios" id="distance_30" value="30d">
+							<input type="radio" name="distanceRadios" id="distance_30" value="30">
 							30 days
 						</label>
 					</td> 
 	 			  </tr>
 				  <tr>
 				  	<td colspan="2">
-						<button id="graph" class="btn btn-primary" type="submit" data-content="Click here to show the graph of your selected keyword!" data-original-title="Show Keyword Graph!" onmouseover="jQuery(this).popover('show')" data-loading-text="Calculating.. ">
+						<button id="show_graph_button" class="btn btn-primary" data-content="Click here to show the graph of your selected keyword!" data-original-title="Show Keyword Graph!" onmouseover="jQuery(this).popover('show')" data-loading-text="Calculating.. ">
 						Show Keyword Graph!
 						</button> 
 					</td> 
@@ -150,9 +148,7 @@ $:render.header(session)
 				  	<td id='similar_keyword_4'>similar_keyword_4</td> 
 		          </tr>
 				</tbody>
-			  </table>
-			</fieldset>
-		  </form>  
+			  </table> 
 		</div><!-- end div for class="keyword-control-div"  -->
 
 	    <!-- keyword-graph-div start  -->  
