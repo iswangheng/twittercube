@@ -38,6 +38,7 @@ def get_keywords_lines(file_name, date_string):
     count = 0 
     keywords_lines = {}
     max_yaxis = 0
+    keywords_str = ""   #stores the 5 keywords, e.g. "one two three four five"
     while True:
         if count == 5:
             break
@@ -45,6 +46,7 @@ def get_keywords_lines(file_name, date_string):
         content = content[0:-1]
         #print content
         index = content.index(':') + 1 
+        keywords_str = keywords_str + content[0:index-1] + " "
         content = content[index:]
         content = content.strip()
         freq_list = content.split(" ")
@@ -69,7 +71,11 @@ def get_keywords_lines(file_name, date_string):
             keywords_lines.update({key_str: single_line})
     max_yaxis = int(float(max_yaxis) * 1.1)
     keywords_lines.update({"max_yaxis": max_yaxis})
+    keywords_lines.update({"keywords_str": keywords_str})
     openfile.close()
+    #now will delete this temp file
+    cmd = 'rm %s' % file_name
+    commands_result = commands.getoutput(cmd)
     return keywords_lines
 
 
@@ -82,18 +88,47 @@ def date_minus_day(date_string, days):
     return datetime.strftime(date_keyword, '%Y-%m-%d')
 
 
+#will return the 5 related news titles regarding to the 5 hottest keywords
+def get_news_titles(file_name, date_str):
+    print "will get 5 related news titles regarding to the 5 hottest keywords"
+    cmd = 'java -jar keywords_to_news.jar %s %s' % (file_name, date_str)
+    output = commands.getoutput(cmd)    
+    openfile = open(file_name,"r")
+    count = 0 
+    news_titles = [] 
+    while True:
+        if count == 5:
+            break
+        content = openfile.readline() 
+        content = content[0:-1] 
+        content = content.strip() 
+        count += 1
+        print "news title: ", content
+        news_titles.append(content)
+    openfile.close()
+    #now will delete this temp file
+    cmd = 'rm %s' % file_name
+    commands_result = commands.getoutput(cmd)
+    return news_titles
+
+
+
 #when user come to the event.html, will show
-# the 5 hottest keywords and their frequencies of that specific date
-#TODO  AND also return the 5 keywords graph data..(which are 5 arrays)
+# the 5 hottest keywords and their frequencies of that specific dat
+#    AND will also show the related news title ragarding to the 5 hottest keywords  
+#    AND also return the 5 keywords graph data..(which are 5 arrays)
 class ShowKeywordsFreqs:
     def POST(self):    
         date_str = web.input().signal
         file_name = web.ctx.session.session_id 
-        print "will show the 5 hottest keywords and frequencies"  
+        print "will show the 5 hottest keywords and frequencies, keywords_lines and 5 news titles"  
         keywords_list = get_keywords(date_str)
         keywords_lines = get_keywords_lines(file_name, date_str)
+        file_name = file_name + "_news_titles"
+        news_titles = get_news_titles(file_name, date_str)
         data = ({'keywords_list': keywords_list}) 
         data.update({'keywords_lines': keywords_lines})
+        data.update({'news_titles': news_titles})
         data_string = json.dumps(data)
         web.header('Content-Type', 'application/json')
         return data_string    

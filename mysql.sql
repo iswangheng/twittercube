@@ -40,6 +40,16 @@ CREATE TABLE `keywords` (
 
 delimiter $$
 
+CREATE TABLE `newsfeed` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1782 DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
 CREATE TABLE `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) DEFAULT NULL,
@@ -59,7 +69,7 @@ CREATE TABLE `sentiment_sentences` (
 
 
 delimiter $$
-/**********  this is the sessions table of web.py  **********/
+
 CREATE TABLE `sessions` (
   `session_id` char(128) NOT NULL,
   `atime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -80,6 +90,3 @@ CREATE TABLE `tweets` (
   `is_processed` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
-
-
-
