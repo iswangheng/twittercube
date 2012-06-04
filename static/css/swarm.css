@@ -298,6 +298,7 @@ strong {
     background-color: #FFF;
 	width: 597px;
     min-height: 150px;
+    height: auto;
 	padding: 0px; 
 	float:left;
 	margin-top:12px;

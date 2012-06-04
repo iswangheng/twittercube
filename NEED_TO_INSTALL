@@ -1,10 +1,33 @@
-0.  python
-1.  sudo apt-get install python-mysqldb
+0.  Python. 
+    Of course you need to install python since it uses a python framework--web.py
+
+1.  MySQL
+    Because it uses mysql as database.
+
+2.  python-mysqldb
+    sudo apt-get install python-mysqldb
+
+2.5 REMEMBER TO import the sql file "twitter_cube.sql" into your MySQL database.
+
 3.  web.py
-4.  mysql
-5.  git clone https://github.com/tweepy/tweepy.git
-    remember to install tweepy
+    A lightweight python framework.
 
-REMEMBER to sudo chmod 777 twittercube/          !!!!
-and some others 777 !!!!!!!!!!!!!!!
+4.  tweepy
+    A Python library for accessing the Twitter API.
+    just git clone https://github.com/tweepy/tweepy.git
+    And then install tweepy. (may need super premission)
 
+5.  Last step is to put current files or directories or whatever into /var/www/twittercube
+    /**********IMPORTANT,  REMEMBER TO "sudo chmod 777 twittercube/"  and some files also need 777 permission ********/
+    And if you want to see how it works in the debug mode, just enter into that direcory and
+    type "python code.py" in the terminal, then you can check the website in "http://localhost:8080" 
+
+
+
+---------------------About me----------------------------------
+Feel free to contact to me if any questions:
+
+iswangheng@gmail.com
+
+github.com/iswangheng
+---------------------About me----------------------------------
